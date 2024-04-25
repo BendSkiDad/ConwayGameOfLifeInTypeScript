@@ -22,6 +22,13 @@ export class CellExtent {
         this.lowerRight = lowerRight;
     }
 }
+function expandCellExtent(target, increment) {
+    target.upperLeft.rowIndex -= increment;
+    target.upperLeft.columnIndex -= increment;
+    target.lowerRight.rowIndex += increment;
+    target.lowerRight.columnIndex += increment;
+    return target;
+}
 let liveCells = [];
 let iterationCount = 0;
 let bornAndSurviveRule = {
@@ -29,7 +36,7 @@ let bornAndSurviveRule = {
     arrSurviveNeighborCounts: [2, 3]
 };
 export function addSimpleGliderGoingUpAndLeft(upperLeftCellOfGlider) {
-    liveCells.push(new Cell(upperLeftCellOfGlider.rowIndex, upperLeftCellOfGlider.columnIndex), new Cell(upperLeftCellOfGlider.rowIndex, upperLeftCellOfGlider.columnIndex + 1), new Cell(upperLeftCellOfGlider.rowIndex, upperLeftCellOfGlider.columnIndex + 2), new Cell(upperLeftCellOfGlider.rowIndex + 1, upperLeftCellOfGlider.columnIndex), new Cell(upperLeftCellOfGlider.rowIndex + 2, upperLeftCellOfGlider.columnIndex));
+    liveCells.push(new Cell(upperLeftCellOfGlider.rowIndex, upperLeftCellOfGlider.columnIndex), new Cell(upperLeftCellOfGlider.rowIndex, upperLeftCellOfGlider.columnIndex + 1), new Cell(upperLeftCellOfGlider.rowIndex, upperLeftCellOfGlider.columnIndex + 2), new Cell(upperLeftCellOfGlider.rowIndex + 1, upperLeftCellOfGlider.columnIndex), new Cell(upperLeftCellOfGlider.rowIndex + 2, upperLeftCellOfGlider.columnIndex + 1));
 }
 export function addSimpleGliderGoingDownAndRight(upperLeftCellOfGlider) {
     liveCells.push(new Cell(upperLeftCellOfGlider.rowIndex, upperLeftCellOfGlider.columnIndex + 1), new Cell(upperLeftCellOfGlider.rowIndex + 1, upperLeftCellOfGlider.columnIndex + 2), new Cell(upperLeftCellOfGlider.rowIndex + 2, upperLeftCellOfGlider.columnIndex), new Cell(upperLeftCellOfGlider.rowIndex + 2, upperLeftCellOfGlider.columnIndex + 1), new Cell(upperLeftCellOfGlider.rowIndex + 2, upperLeftCellOfGlider.columnIndex + 2));
@@ -69,12 +76,7 @@ function deriveNumberOfLiveNeighbors(target) {
     return liveNeighborCells.length;
 }
 function deriveNextSetOfLiveCellsFromCurrentLiveCells() {
-    // find indexes just outside the live cells
-    const extentOfLiveCellsExpandedBy1 = getExtentOfLiveCells();
-    extentOfLiveCellsExpandedBy1.upperLeft.rowIndex -= 1;
-    extentOfLiveCellsExpandedBy1.upperLeft.columnIndex -= 1;
-    extentOfLiveCellsExpandedBy1.lowerRight.rowIndex += 1;
-    extentOfLiveCellsExpandedBy1.lowerRight.columnIndex += 1;
+    const extentOfLiveCellsExpandedBy1 = expandCellExtent(getExtentOfLiveCells(), 1);
     const newLiveCells = [];
     for (let rowIndex = extentOfLiveCellsExpandedBy1.upperLeft.rowIndex; rowIndex <= extentOfLiveCellsExpandedBy1.lowerRight.rowIndex; rowIndex++) {
         for (let columnIndex = extentOfLiveCellsExpandedBy1.upperLeft.columnIndex; columnIndex <= extentOfLiveCellsExpandedBy1.lowerRight.columnIndex; columnIndex++) {

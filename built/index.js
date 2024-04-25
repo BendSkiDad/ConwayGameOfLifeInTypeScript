@@ -19,8 +19,8 @@ let startingBoardExtent = {
         columnIndex: 10
     }
 };
-const boardHtmlGenerator = new BoardHtmlGenerator(startingBoardExtent, boardContainerElement);
-const controlHtmlGenerator = new ControlHtmlGenerator(boardHtmlGenerator);
+const boardHtmlGenerator = BoardHtmlGenerator(startingBoardExtent, boardContainerElement);
+const controlHtmlGenerator = ControlHtmlGenerator(boardHtmlGenerator);
 boardHtmlGenerator.updateBoardElement();
 const controlElements = controlHtmlGenerator.controlElements(0); // iterationCount
 controlElements.forEach(element => {

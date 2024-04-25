@@ -1,148 +1,140 @@
 import * as logic from "./logicTwoDimensional.js"
-import { BoardHtmlGenerator } from "./boardHtmlGenerator.js"
+import { IBoardHtmlGenerator } from "./boardHtmlGenerator.js"
 
-export class ControlHtmlGenerator {
-    //private iterationCountElementId: string = 'iterationCount'
-    private runButton: HTMLInputElement = this.deriveButton('Run', this.handleRunClick)
-    private iterationCountElement: HTMLSpanElement = document.createElement('span')
-    private interval: number = 0
-    private isRunning: boolean = false
-    private boardHtmlGenerator: BoardHtmlGenerator
+export function ControlHtmlGenerator (boardHtmlGenerator: IBoardHtmlGenerator) {
+    const runButton: HTMLInputElement = deriveButton('Run', handleRunClick)
+    const iterationCountElement: HTMLSpanElement = document.createElement('span')
+    let interval: number = 0
+    let isRunning: boolean = false
 
-    constructor(boardHtmlGenerator_: BoardHtmlGenerator) {
-        this.boardHtmlGenerator = boardHtmlGenerator_
-    }
-    private renderRunStopButtonAsRun (): void {
-        //const runButton: HTMLElement = document.getElementById('btnRun') as HTMLButtonElement
-        this.runButton.value = 'Run'
+    function renderRunStopButtonAsRun (): void {
+        runButton.value = 'Run'
     }
   
-    private renderRunStopButtonAsStop (): void {
-      //const runButton = document.getElementById('btnRun')
-      this.runButton.value = 'Stop'
+    function renderRunStopButtonAsStop (): void {
+        runButton.value = 'Stop'
     }
   
-    private updateIterationCount (): void {
-    //   const iterationCountDiv =
-    //         document.getElementById(this.iterationCountElementId)
-      this.iterationCountElement.textContent = logic.getIterationCount().toString()
+    function updateIterationCount (): void {
+        iterationCountElement.textContent = logic.getIterationCount().toString()
     }
   
-    private deriveRuleDescriptionElement (): HTMLParagraphElement {
-      const rule: logic.BornAndSurviveRule = logic.getBornAndSuviveRule()
-      const ruleText = 'Rule: B' + rule.arrBornNeighborCounts.join('') + '/S' + rule.arrSurviveNeighborCounts.join('')
-      const textNode = document.createTextNode(ruleText)
-      const pElement = document.createElement('p')
-      pElement.appendChild(textNode)
-      return pElement
+    function deriveRuleDescriptionElement (): HTMLParagraphElement {
+        const rule: logic.BornAndSurviveRule = logic.getBornAndSuviveRule()
+        const ruleText = 'Rule: B' + rule.arrBornNeighborCounts.join('') + '/S' + rule.arrSurviveNeighborCounts.join('')
+        const textNode = document.createTextNode(ruleText)
+        const pElement = document.createElement('p')
+        pElement.appendChild(textNode)
+        return pElement
     }
   
-    private deriveIterationCountParagraph (iterationCount: number): HTMLParagraphElement {
-      const labelTextNode = document.createTextNode('Iteration Count:')
-      //const iterationCountElement = document.createElement('span')
-      //iterationCountElement.setAttribute('id', this.iterationCountElementId)
-      const countTextNode = document.createTextNode(iterationCount.toString())
-      this.iterationCountElement.appendChild(countTextNode)
-      const pElement = document.createElement('p')
-      pElement.appendChild(labelTextNode)
-      pElement.appendChild(this.iterationCountElement)
-      return pElement
+    function deriveIterationCountParagraph (iterationCount: number): HTMLParagraphElement {
+        const labelTextNode = document.createTextNode('Iteration Count:')
+        const countTextNode = document.createTextNode(iterationCount.toString())
+        iterationCountElement.appendChild(countTextNode)
+        const pElement = document.createElement('p')
+        pElement.appendChild(labelTextNode)
+        pElement.appendChild(iterationCountElement)
+        return pElement
     }
   
-    private deriveButton (value: string, fnClickHandler?: EventListenerOrEventListenerObject): HTMLInputElement {
-      const button: HTMLInputElement = document.createElement('input')
-      button.setAttribute('type', 'button')
-      button.setAttribute('value', value)
-      if(fnClickHandler) {
-          button.addEventListener('click', fnClickHandler)
-      }
-      button.classList.add('button')
-      return button
+    function deriveButton (value: string, fnClickHandler?: EventListenerOrEventListenerObject): HTMLInputElement {
+        const button: HTMLInputElement = document.createElement('input')
+        button.setAttribute('type', 'button')
+        button.setAttribute('value', value)
+        if(fnClickHandler) {
+            button.addEventListener('click', fnClickHandler)
+        }
+        button.classList.add('button')
+        return button
     }
 
-    private deriveButtonsContainerElement (): HTMLElement {
-      const advanceOneStepButton: HTMLInputElement =
-        this.deriveButton('Advance a step', this.handleAdvanceAStepClick)
-      const addRowButton: HTMLInputElement = this.deriveButton('Add Row', this.handleAddRowClick)
-      const addColumnButton: HTMLInputElement = this.deriveButton('Add Column', this.handleAddColumnClick)
-      const resetButton: HTMLInputElement = this.deriveButton('Clear', this.handleClearClick)
-      //const runButton = this.deriveButton('Run', this.handleRunClick)
-      //runButton.setAttribute('id', 'btnRun')
-  
-      const buttonContainerElement: HTMLDivElement = document.createElement('div')
-      buttonContainerElement.appendChild(advanceOneStepButton)
-      buttonContainerElement.appendChild(addRowButton)
-      buttonContainerElement.appendChild(addColumnButton)
-      buttonContainerElement.appendChild(resetButton)
-      buttonContainerElement.appendChild(this.runButton)
-  
-      return buttonContainerElement
+    function deriveButtonsContainerElement (): HTMLElement {
+        const advanceOneStepButton: HTMLInputElement =
+            deriveButton('Advance a step', handleAdvanceAStepClick)
+        const addRowButton: HTMLInputElement =
+            deriveButton('Add Row', handleAddRowClick)
+        const addColumnButton: HTMLInputElement =
+            deriveButton('Add Column', handleAddColumnClick)
+        const resetButton: HTMLInputElement =
+            deriveButton('Clear', handleClearClick)
+        const buttonContainerElement: HTMLDivElement =
+            document.createElement('div')
+        buttonContainerElement.appendChild(advanceOneStepButton)
+        buttonContainerElement.appendChild(addRowButton)
+        buttonContainerElement.appendChild(addColumnButton)
+        buttonContainerElement.appendChild(resetButton)
+        buttonContainerElement.appendChild(runButton)
+        return buttonContainerElement
     }
   
-    public controlElements (iterationCount: number): HTMLElement[] {
-      const ruleDescriptionElement: HTMLElement =
-            this.deriveRuleDescriptionElement()
-      const iterationCountParagraphElement: HTMLElement =
-            this.deriveIterationCountParagraph(iterationCount)
-  
-      const buttonsContainerElement: HTMLElement = this.deriveButtonsContainerElement()
-  
-      return [
-        iterationCountParagraphElement,
-        buttonsContainerElement,
-        ruleDescriptionElement]
+    function controlElements (iterationCount: number): HTMLElement[] {
+        const ruleDescriptionElement: HTMLElement =
+            deriveRuleDescriptionElement()
+        const iterationCountParagraphElement: HTMLElement =
+            deriveIterationCountParagraph(iterationCount)
+        const buttonsContainerElement: HTMLElement =
+            deriveButtonsContainerElement()
+        return [
+            iterationCountParagraphElement,
+            buttonsContainerElement,
+            ruleDescriptionElement]
     }
   
     // event handlers and their helper methods
-    private advanceOneStepAndUpdateHtml (): void {
-      logic.advanceOneStep()
-      this.boardHtmlGenerator.updateBoardElement()
-      this.updateIterationCount()
+    function advanceOneStepAndUpdateHtml (): void {
+        logic.advanceOneStep()
+        boardHtmlGenerator.updateBoardElement()
+        updateIterationCount()
     }
   
-    private start (): void {
-      this.interval = setInterval(this.advanceOneStepAndUpdateHtml, 1000)
-      this.isRunning = true
-      this.renderRunStopButtonAsStop()
+    function start (): void {
+        interval = setInterval(advanceOneStepAndUpdateHtml, 1000)
+        isRunning = true
+        renderRunStopButtonAsStop()
     }
   
-    private stop (): void {
-      clearInterval(this.interval)
-      this.isRunning = false
-      this.renderRunStopButtonAsRun()
+    function stop (): void {
+        clearInterval(interval)
+        isRunning = false
+        renderRunStopButtonAsRun()
     }
   
-    private clear (): void {
-      if (this.isRunning) {
-        this.stop()
-      }
-      logic.clearLiveCells()
-      this.boardHtmlGenerator.updateBoardElement()
+    function clear (): void {
+        if (isRunning) {
+            stop()
+        }
+        logic.clearLiveCells()
+        boardHtmlGenerator.updateBoardElement()
     }
   
-    private handleAdvanceAStepClick (): void {
-        this.advanceOneStepAndUpdateHtml()
+    function handleAdvanceAStepClick (): void {
+        advanceOneStepAndUpdateHtml()
     }
   
-    private handleAddRowClick (): void {
-      this.boardHtmlGenerator.addRow()
-      this.boardHtmlGenerator.updateBoardElement()
+    function handleAddRowClick (): void {
+        boardHtmlGenerator.addRow()
+        boardHtmlGenerator.updateBoardElement()
     }
   
-    private handleAddColumnClick (): void {
-      this.boardHtmlGenerator.addColumn()
-      this.boardHtmlGenerator.updateBoardElement()
+    function handleAddColumnClick (): void {
+        boardHtmlGenerator.addColumn()
+        boardHtmlGenerator.updateBoardElement()
     }
   
-    private handleClearClick (): void {
-      this.clear()
+    function handleClearClick (): void {
+        clear()
     }
   
-    private handleRunClick (): void {
-      if (this.isRunning) {
-        stop()
+    function handleRunClick (): void {
+        if (isRunning) {
+            stop()
       } else {
-        this.start()
+            start()
       }
+    }
+
+    return {
+        controlElements
     }
 }

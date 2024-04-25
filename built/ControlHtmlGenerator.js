@@ -1,27 +1,24 @@
 import * as logic from "./logicTwoDimensional.js";
-export class ControlHtmlGenerator {
-    constructor(boardHtmlGenerator_) {
-        //private iterationCountElementId: string = 'iterationCount'
-        this.runButton = this.deriveButton('Run', this.handleRunClick);
-        this.iterationCountElement = document.createElement('span');
-        this.interval = 0;
-        this.isRunning = false;
-        this.boardHtmlGenerator = boardHtmlGenerator_;
-    }
-    renderRunStopButtonAsRun() {
+export function ControlHtmlGenerator(boardHtmlGenerator) {
+    //private iterationCountElementId: string = 'iterationCount'
+    const runButton = deriveButton('Run', handleRunClick);
+    const iterationCountElement = document.createElement('span');
+    let interval = 0;
+    let isRunning = false;
+    function renderRunStopButtonAsRun() {
         //const runButton: HTMLElement = document.getElementById('btnRun') as HTMLButtonElement
-        this.runButton.value = 'Run';
+        runButton.value = 'Run';
     }
-    renderRunStopButtonAsStop() {
+    function renderRunStopButtonAsStop() {
         //const runButton = document.getElementById('btnRun')
-        this.runButton.value = 'Stop';
+        runButton.value = 'Stop';
     }
-    updateIterationCount() {
+    function updateIterationCount() {
         //   const iterationCountDiv =
-        //         document.getElementById(this.iterationCountElementId)
-        this.iterationCountElement.textContent = logic.getIterationCount().toString();
+        //         document.getElementById(iterationCountElementId)
+        iterationCountElement.textContent = logic.getIterationCount().toString();
     }
-    deriveRuleDescriptionElement() {
+    function deriveRuleDescriptionElement() {
         const rule = logic.getBornAndSuviveRule();
         const ruleText = 'Rule: B' + rule.arrBornNeighborCounts.join('') + '/S' + rule.arrSurviveNeighborCounts.join('');
         const textNode = document.createTextNode(ruleText);
@@ -29,18 +26,18 @@ export class ControlHtmlGenerator {
         pElement.appendChild(textNode);
         return pElement;
     }
-    deriveIterationCountParagraph(iterationCount) {
+    function deriveIterationCountParagraph(iterationCount) {
         const labelTextNode = document.createTextNode('Iteration Count:');
         //const iterationCountElement = document.createElement('span')
-        //iterationCountElement.setAttribute('id', this.iterationCountElementId)
+        //iterationCountElement.setAttribute('id', iterationCountElementId)
         const countTextNode = document.createTextNode(iterationCount.toString());
-        this.iterationCountElement.appendChild(countTextNode);
+        iterationCountElement.appendChild(countTextNode);
         const pElement = document.createElement('p');
         pElement.appendChild(labelTextNode);
-        pElement.appendChild(this.iterationCountElement);
+        pElement.appendChild(iterationCountElement);
         return pElement;
     }
-    deriveButton(value, fnClickHandler) {
+    function deriveButton(value, fnClickHandler) {
         const button = document.createElement('input');
         button.setAttribute('type', 'button');
         button.setAttribute('value', value);
@@ -50,25 +47,25 @@ export class ControlHtmlGenerator {
         button.classList.add('button');
         return button;
     }
-    deriveButtonsContainerElement() {
-        const advanceOneStepButton = this.deriveButton('Advance a step', this.handleAdvanceAStepClick);
-        const addRowButton = this.deriveButton('Add Row', this.handleAddRowClick);
-        const addColumnButton = this.deriveButton('Add Column', this.handleAddColumnClick);
-        const resetButton = this.deriveButton('Clear', this.handleClearClick);
-        //const runButton = this.deriveButton('Run', this.handleRunClick)
+    function deriveButtonsContainerElement() {
+        const advanceOneStepButton = deriveButton('Advance a step', handleAdvanceAStepClick);
+        const addRowButton = deriveButton('Add Row', handleAddRowClick);
+        const addColumnButton = deriveButton('Add Column', handleAddColumnClick);
+        const resetButton = deriveButton('Clear', handleClearClick);
+        //const runButton = deriveButton('Run', handleRunClick)
         //runButton.setAttribute('id', 'btnRun')
         const buttonContainerElement = document.createElement('div');
         buttonContainerElement.appendChild(advanceOneStepButton);
         buttonContainerElement.appendChild(addRowButton);
         buttonContainerElement.appendChild(addColumnButton);
         buttonContainerElement.appendChild(resetButton);
-        buttonContainerElement.appendChild(this.runButton);
+        buttonContainerElement.appendChild(runButton);
         return buttonContainerElement;
     }
-    controlElements(iterationCount) {
-        const ruleDescriptionElement = this.deriveRuleDescriptionElement();
-        const iterationCountParagraphElement = this.deriveIterationCountParagraph(iterationCount);
-        const buttonsContainerElement = this.deriveButtonsContainerElement();
+    function controlElements(iterationCount) {
+        const ruleDescriptionElement = deriveRuleDescriptionElement();
+        const iterationCountParagraphElement = deriveIterationCountParagraph(iterationCount);
+        const buttonsContainerElement = deriveButtonsContainerElement();
         return [
             iterationCountParagraphElement,
             buttonsContainerElement,
@@ -76,48 +73,51 @@ export class ControlHtmlGenerator {
         ];
     }
     // event handlers and their helper methods
-    advanceOneStepAndUpdateHtml() {
+    function advanceOneStepAndUpdateHtml() {
         logic.advanceOneStep();
-        this.boardHtmlGenerator.updateBoardElement();
-        this.updateIterationCount();
+        boardHtmlGenerator.updateBoardElement();
+        updateIterationCount();
     }
-    start() {
-        this.interval = setInterval(this.advanceOneStepAndUpdateHtml, 1000);
-        this.isRunning = true;
-        this.renderRunStopButtonAsStop();
+    function start() {
+        interval = setInterval(advanceOneStepAndUpdateHtml, 1000);
+        isRunning = true;
+        renderRunStopButtonAsStop();
     }
-    stop() {
-        clearInterval(this.interval);
-        this.isRunning = false;
-        this.renderRunStopButtonAsRun();
+    function stop() {
+        clearInterval(interval);
+        isRunning = false;
+        renderRunStopButtonAsRun();
     }
-    clear() {
-        if (this.isRunning) {
-            this.stop();
+    function clear() {
+        if (isRunning) {
+            stop();
         }
         logic.clearLiveCells();
-        this.boardHtmlGenerator.updateBoardElement();
+        boardHtmlGenerator.updateBoardElement();
     }
-    handleAdvanceAStepClick() {
-        this.advanceOneStepAndUpdateHtml();
+    function handleAdvanceAStepClick() {
+        advanceOneStepAndUpdateHtml();
     }
-    handleAddRowClick() {
-        this.boardHtmlGenerator.addRow();
-        this.boardHtmlGenerator.updateBoardElement();
+    function handleAddRowClick() {
+        boardHtmlGenerator.addRow();
+        boardHtmlGenerator.updateBoardElement();
     }
-    handleAddColumnClick() {
-        this.boardHtmlGenerator.addColumn();
-        this.boardHtmlGenerator.updateBoardElement();
+    function handleAddColumnClick() {
+        boardHtmlGenerator.addColumn();
+        boardHtmlGenerator.updateBoardElement();
     }
-    handleClearClick() {
-        this.clear();
+    function handleClearClick() {
+        clear();
     }
-    handleRunClick() {
-        if (this.isRunning) {
+    function handleRunClick() {
+        if (isRunning) {
             stop();
         }
         else {
-            this.start();
+            start();
         }
     }
+    return {
+        controlElements
+    };
 }

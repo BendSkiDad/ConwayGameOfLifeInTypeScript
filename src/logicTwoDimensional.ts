@@ -43,6 +43,27 @@ export class CellExtent {
     }
 }
 
+function incrementCellExtent (target: CellExtent, increment: number): CellExtent {
+    target.upperLeft.rowIndex -= increment
+    target.upperLeft.columnIndex -= increment
+    target.lowerRight.rowIndex += increment
+    target.lowerRight.columnIndex += increment
+    return target
+}
+
+export function getCellExtentThatEncompasses(first: CellExtent, second: CellExtent) {
+    return new CellExtent(
+        {
+            rowIndex: Math.min(first.upperLeft.rowIndex, second.upperLeft.rowIndex),
+            columnIndex: Math.min(first.upperLeft.columnIndex, second.upperLeft.columnIndex)        
+        },
+        {
+            rowIndex: Math.max(first.lowerRight.rowIndex, second.lowerRight.rowIndex),
+            columnIndex: Math.max(first.lowerRight.columnIndex, second.lowerRight.columnIndex)
+        })
+}
+
+
 let liveCells: Cell[] = []
 let iterationCount: number = 0
 let bornAndSurviveRule: BornAndSurviveRule = {
@@ -56,7 +77,7 @@ export function addSimpleGliderGoingUpAndLeft (upperLeftCellOfGlider: ICell) : v
         new Cell(upperLeftCellOfGlider.rowIndex, upperLeftCellOfGlider.columnIndex + 1),
         new Cell(upperLeftCellOfGlider.rowIndex, upperLeftCellOfGlider.columnIndex + 2),
         new Cell(upperLeftCellOfGlider.rowIndex + 1, upperLeftCellOfGlider.columnIndex),
-        new Cell(upperLeftCellOfGlider.rowIndex + 2, upperLeftCellOfGlider.columnIndex)
+        new Cell(upperLeftCellOfGlider.rowIndex + 2, upperLeftCellOfGlider.columnIndex + 1)
     )
 }
 
@@ -109,12 +130,8 @@ function deriveNumberOfLiveNeighbors (target: ICell): number {
 }
 
 function deriveNextSetOfLiveCellsFromCurrentLiveCells (): Cell[] {
-    // find indexes just outside the live cells
-    const extentOfLiveCellsExpandedBy1 = getExtentOfLiveCells()
-    extentOfLiveCellsExpandedBy1.upperLeft.rowIndex -= 1
-    extentOfLiveCellsExpandedBy1.upperLeft.columnIndex -= 1
-    extentOfLiveCellsExpandedBy1.lowerRight.rowIndex += 1
-    extentOfLiveCellsExpandedBy1.lowerRight.columnIndex += 1
+    const extentOfLiveCellsExpandedBy1: CellExtent =
+        incrementCellExtent(getExtentOfLiveCells(), 1)
 
     const newLiveCells: Cell[] = []
     for (let rowIndex: number = extentOfLiveCellsExpandedBy1.upperLeft.rowIndex; rowIndex <= extentOfLiveCellsExpandedBy1.lowerRight.rowIndex; rowIndex++) {
