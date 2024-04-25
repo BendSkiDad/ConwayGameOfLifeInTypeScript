@@ -1,0 +1,28 @@
+table {
+    border-spacing: 0px;
+}
+
+table tr th {
+    font-weight: normal;
+}
+
+.noPadding {
+    padding: 0px;
+}
+
+.cell {
+    border: none;
+    background-color: grey;
+    padding: 0px;
+}
+
+.liveCell {
+    background-color: yellow;
+}
+
+.button {
+    margin: 5px;
+    padding: 10px;
+    background-color: blue;
+    color: white;
+}
