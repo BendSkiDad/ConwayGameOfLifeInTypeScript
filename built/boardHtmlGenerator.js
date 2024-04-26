@@ -6,11 +6,7 @@ export function BoardHtmlGenerator(startingBoardExtent, boardContainerElement) {
     const lineBetweenCellsWidth = 1;
     function updateCurrentBoardExtentToReflectLiveCells() {
         const liveCellsExtent = logic.getExtentOfLiveCells();
-        // expand currrent board outer coordinates if necessary
-        currentBoardExtent.upperLeft.rowIndex = Math.min(currentBoardExtent.upperLeft.rowIndex, liveCellsExtent.upperLeft.rowIndex);
-        currentBoardExtent.upperLeft.columnIndex = Math.min(currentBoardExtent.upperLeft.columnIndex, liveCellsExtent.upperLeft.columnIndex);
-        currentBoardExtent.lowerRight.rowIndex = Math.max(currentBoardExtent.lowerRight.rowIndex, liveCellsExtent.lowerRight.rowIndex);
-        currentBoardExtent.lowerRight.columnIndex = Math.max(currentBoardExtent.lowerRight.columnIndex, liveCellsExtent.lowerRight.columnIndex);
+        currentBoardExtent = logic.getCellExtentThatEncompasses(currentBoardExtent, liveCellsExtent);
     }
     function generateBoardAsCanvasHtmlElementFrom() {
         const columnCount = currentBoardExtent.lowerRight.columnIndex -

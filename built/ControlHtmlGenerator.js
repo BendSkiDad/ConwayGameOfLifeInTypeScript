@@ -1,21 +1,16 @@
 import * as logic from "./logicTwoDimensional.js";
 export function ControlHtmlGenerator(boardHtmlGenerator) {
-    //private iterationCountElementId: string = 'iterationCount'
     const runButton = deriveButton('Run', handleRunClick);
     const iterationCountElement = document.createElement('span');
     let interval = 0;
     let isRunning = false;
     function renderRunStopButtonAsRun() {
-        //const runButton: HTMLElement = document.getElementById('btnRun') as HTMLButtonElement
         runButton.value = 'Run';
     }
     function renderRunStopButtonAsStop() {
-        //const runButton = document.getElementById('btnRun')
         runButton.value = 'Stop';
     }
     function updateIterationCount() {
-        //   const iterationCountDiv =
-        //         document.getElementById(iterationCountElementId)
         iterationCountElement.textContent = logic.getIterationCount().toString();
     }
     function deriveRuleDescriptionElement() {
@@ -28,8 +23,6 @@ export function ControlHtmlGenerator(boardHtmlGenerator) {
     }
     function deriveIterationCountParagraph(iterationCount) {
         const labelTextNode = document.createTextNode('Iteration Count:');
-        //const iterationCountElement = document.createElement('span')
-        //iterationCountElement.setAttribute('id', iterationCountElementId)
         const countTextNode = document.createTextNode(iterationCount.toString());
         iterationCountElement.appendChild(countTextNode);
         const pElement = document.createElement('p');
@@ -52,8 +45,6 @@ export function ControlHtmlGenerator(boardHtmlGenerator) {
         const addRowButton = deriveButton('Add Row', handleAddRowClick);
         const addColumnButton = deriveButton('Add Column', handleAddColumnClick);
         const resetButton = deriveButton('Clear', handleClearClick);
-        //const runButton = deriveButton('Run', handleRunClick)
-        //runButton.setAttribute('id', 'btnRun')
         const buttonContainerElement = document.createElement('div');
         buttonContainerElement.appendChild(advanceOneStepButton);
         buttonContainerElement.appendChild(addRowButton);

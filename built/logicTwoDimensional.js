@@ -22,12 +22,21 @@ export class CellExtent {
         this.lowerRight = lowerRight;
     }
 }
-function expandCellExtent(target, increment) {
+function incrementCellExtent(target, increment) {
     target.upperLeft.rowIndex -= increment;
     target.upperLeft.columnIndex -= increment;
     target.lowerRight.rowIndex += increment;
     target.lowerRight.columnIndex += increment;
     return target;
+}
+export function getCellExtentThatEncompasses(first, second) {
+    return new CellExtent({
+        rowIndex: Math.min(first.upperLeft.rowIndex, second.upperLeft.rowIndex),
+        columnIndex: Math.min(first.upperLeft.columnIndex, second.upperLeft.columnIndex)
+    }, {
+        rowIndex: Math.max(first.lowerRight.rowIndex, second.lowerRight.rowIndex),
+        columnIndex: Math.max(first.lowerRight.columnIndex, second.lowerRight.columnIndex)
+    });
 }
 let liveCells = [];
 let iterationCount = 0;
@@ -76,7 +85,7 @@ function deriveNumberOfLiveNeighbors(target) {
     return liveNeighborCells.length;
 }
 function deriveNextSetOfLiveCellsFromCurrentLiveCells() {
-    const extentOfLiveCellsExpandedBy1 = expandCellExtent(getExtentOfLiveCells(), 1);
+    const extentOfLiveCellsExpandedBy1 = incrementCellExtent(getExtentOfLiveCells(), 1);
     const newLiveCells = [];
     for (let rowIndex = extentOfLiveCellsExpandedBy1.upperLeft.rowIndex; rowIndex <= extentOfLiveCellsExpandedBy1.lowerRight.rowIndex; rowIndex++) {
         for (let columnIndex = extentOfLiveCellsExpandedBy1.upperLeft.columnIndex; columnIndex <= extentOfLiveCellsExpandedBy1.lowerRight.columnIndex; columnIndex++) {
