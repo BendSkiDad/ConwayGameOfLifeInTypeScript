@@ -1,7 +1,11 @@
 import * as logic from "./logicTwoDimensional.js"
 import { IBoardHtmlGenerator } from "./boardHtmlGenerator.js"
 
-export function ControlHtmlGenerator (boardHtmlGenerator: IBoardHtmlGenerator) {
+export interface IControlHtmlGenerator {
+    controlElements: Function
+}
+
+export function ControlHtmlGenerator (boardHtmlGenerator: IBoardHtmlGenerator) : IControlHtmlGenerator {
     const runButton: HTMLInputElement = deriveButton('Run', handleRunClick)
     const iterationCountElement: HTMLSpanElement = document.createElement('span')
     let interval: number = 0
@@ -134,7 +138,9 @@ export function ControlHtmlGenerator (boardHtmlGenerator: IBoardHtmlGenerator) {
       }
     }
 
-    return {
+    const rc: IControlHtmlGenerator = {
         controlElements
     }
+
+    return rc
 }

@@ -59,9 +59,10 @@ export function BoardHtmlGenerator(startingBoardExtent, boardContainerElement) {
         const boardAsHtmlCanvasElement = generateBoardAsCanvasHtmlElementFrom();
         boardContainerElement.replaceChildren(boardAsHtmlCanvasElement);
     }
-    return {
+    const rc = {
         addRow,
         addColumn,
         updateBoardElement
     };
+    return rc;
 }

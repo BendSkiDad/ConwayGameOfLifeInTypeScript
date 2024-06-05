@@ -6,7 +6,7 @@ export interface IBoardHtmlGenerator {
     updateBoardElement: Function
 }
 
-export function BoardHtmlGenerator (startingBoardExtent: logic.CellExtent, boardContainerElement: HTMLElement) {
+export function BoardHtmlGenerator (startingBoardExtent: logic.CellExtent, boardContainerElement: HTMLElement) : IBoardHtmlGenerator {
     let currentBoardExtent: logic.CellExtent = startingBoardExtent
 
     const cellWidth: number = 13
@@ -74,9 +74,11 @@ export function BoardHtmlGenerator (startingBoardExtent: logic.CellExtent, board
         boardContainerElement.replaceChildren(boardAsHtmlCanvasElement)
     }
 
-    return {
+    const rc: IBoardHtmlGenerator = {
         addRow,
         addColumn,
         updateBoardElement
     }
+
+    return rc
 }

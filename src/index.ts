@@ -1,6 +1,6 @@
 import * as logic from "./logicTwoDimensional.js"
 import { BoardHtmlGenerator, IBoardHtmlGenerator } from "./boardHtmlGenerator.js"
-import { ControlHtmlGenerator } from "./ControlHtmlGenerator.js"
+import { ControlHtmlGenerator, IControlHtmlGenerator } from "./ControlHtmlGenerator.js"
 
 // create and add a container element for the board
 const boardContainerElement: HTMLParagraphElement = document.createElement('p')
@@ -24,7 +24,7 @@ let startingBoardExtent: logic.CellExtent = {
 }
 const boardHtmlGenerator: IBoardHtmlGenerator =
     BoardHtmlGenerator(startingBoardExtent, boardContainerElement)
-const controlHtmlGenerator =
+const controlHtmlGenerator : IControlHtmlGenerator =
     ControlHtmlGenerator(boardHtmlGenerator)
 boardHtmlGenerator.updateBoardElement()
 const controlElements: HTMLElement[] =

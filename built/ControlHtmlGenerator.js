@@ -108,7 +108,8 @@ export function ControlHtmlGenerator(boardHtmlGenerator) {
             start();
         }
     }
-    return {
+    const rc = {
         controlElements
     };
+    return rc;
 }
