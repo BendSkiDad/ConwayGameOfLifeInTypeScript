@@ -58,6 +58,11 @@ export function BoardHtmlGenerator(startingBoardExtent, boardContainerElement) {
         updateCurrentBoardExtentToReflectLiveCells();
         const boardAsHtmlCanvasElement = generateBoardAsCanvasHtmlElementFrom();
         boardContainerElement.replaceChildren(boardAsHtmlCanvasElement);
+        // const liveCellsAsJSON = logic.liveCellsAsJSON()
+        // const textNode = document.createTextNode(liveCellsAsJSON)
+        // const pElement = document.createElement('p')
+        // pElement.appendChild(textNode)
+        // boardContainerElement.replaceChildren(boardAsHtmlCanvasElement, pElement)
     }
     const rc = {
         addRow,

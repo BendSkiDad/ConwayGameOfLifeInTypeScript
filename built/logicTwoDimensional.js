@@ -44,6 +44,11 @@ let bornAndSurviveRule = {
     arrBornNeighborCounts: [3],
     arrSurviveNeighborCounts: [2, 3]
 };
+export function liveCellsAsJSON() {
+    return JSON.stringify({
+        liveCells: liveCells
+    });
+}
 export function addSimpleGliderGoingUpAndLeft(upperLeftCellOfGlider) {
     liveCells.push(new Cell(upperLeftCellOfGlider.rowIndex, upperLeftCellOfGlider.columnIndex), new Cell(upperLeftCellOfGlider.rowIndex, upperLeftCellOfGlider.columnIndex + 1), new Cell(upperLeftCellOfGlider.rowIndex, upperLeftCellOfGlider.columnIndex + 2), new Cell(upperLeftCellOfGlider.rowIndex + 1, upperLeftCellOfGlider.columnIndex), new Cell(upperLeftCellOfGlider.rowIndex + 2, upperLeftCellOfGlider.columnIndex + 1));
 }

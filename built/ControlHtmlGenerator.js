@@ -51,7 +51,24 @@ export function ControlHtmlGenerator(boardHtmlGenerator) {
         buttonContainerElement.appendChild(addColumnButton);
         buttonContainerElement.appendChild(resetButton);
         buttonContainerElement.appendChild(runButton);
+        const textBoxElement = document.createElement('input');
+        textBoxElement.setAttribute('type', 'text');
+        textBoxElement.setAttribute('id', 'idSaveName');
+        const saveButton = deriveButton('Save', handleSaveClick);
+        buttonContainerElement.appendChild(textBoxElement);
+        buttonContainerElement.appendChild(saveButton);
         return buttonContainerElement;
+    }
+    function handleSaveClick() {
+        const saveNameElement = document.getElementById('idSaveName');
+        const saveName = saveNameElement.value;
+        if (saveName) {
+            const liveCellsAsJSON = logic.liveCellsAsJSON();
+            alert('the JSON below should be saved with this name: ' + saveName + ' ' + liveCellsAsJSON);
+        }
+        else {
+            alert('please enter a save name');
+        }
     }
     function controlElements(iterationCount) {
         const ruleDescriptionElement = deriveRuleDescriptionElement();
