@@ -6,7 +6,7 @@ export function BoardHtmlGenerator(startingBoardExtent, boardContainerElement) {
     const lineBetweenCellsWidth = 1;
     function updateCurrentBoardExtentToReflectLiveCells() {
         const extentOfLiveCells = logic.getExtentOfLiveCells();
-        currentBoardExtent = logic.getCellExtentThatEncompasses(currentBoardExtent, extentOfLiveCells);
+        currentBoardExtent = currentBoardExtent.getExpandedCellExtentToEncompass(extentOfLiveCells);
     }
     function deriveColumnCount() {
         return currentBoardExtent.lowerRightCell.columnIndex -

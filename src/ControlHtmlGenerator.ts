@@ -24,7 +24,7 @@ export function ControlHtmlGenerator (boardHtmlGenerator: IBoardHtmlGenerator) :
     }
   
     function deriveRuleDescriptionElement (): HTMLParagraphElement {
-        const rule: logic.BornAndSurviveRule = logic.getBornAndSuviveRule()
+        const rule: logic.BornAndSurviveRule = logic.getBornAndSurviveRule()
         const ruleText = 'Rule: B' + rule.arrBornNeighborCounts.join('') + '/S' + rule.arrSurviveNeighborCounts.join('')
         const textNode = document.createTextNode(ruleText)
         const pElement = document.createElement('p')

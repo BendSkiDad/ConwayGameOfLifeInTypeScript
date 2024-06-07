@@ -11,9 +11,10 @@ export function BoardHtmlGenerator (startingBoardExtent: logic.CellExtent, board
     const cellWidth: number = 20
     const cellHeight: number = cellWidth
     const lineBetweenCellsWidth: number = 1
+
     function updateCurrentBoardExtentToReflectLiveCells (): void {
         const extentOfLiveCells: logic.CellExtent = logic.getExtentOfLiveCells()
-        currentBoardExtent = logic.getCellExtentThatEncompasses(currentBoardExtent, extentOfLiveCells)
+        currentBoardExtent = currentBoardExtent.getExpandedCellExtentToEncompass(extentOfLiveCells)
     }
 
     function deriveColumnCount(): number {

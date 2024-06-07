@@ -8,7 +8,7 @@ export interface ICell {
     columnIndex: number
 }
 
-class Cell implements ICell {
+export class Cell implements ICell {
     rowIndex: number
     columnIndex: number
 
@@ -41,26 +41,27 @@ export class CellExtent {
         this.upperLeftCell = upperLeftCell
         this.lowerRightCell = lowerRightCell
     }
-}
 
-function incrementCellExtent (target: CellExtent, increment: number): CellExtent {
-    target.upperLeftCell.rowIndex -= increment
-    target.upperLeftCell.columnIndex -= increment
-    target.lowerRightCell.rowIndex += increment
-    target.lowerRightCell.columnIndex += increment
-    return target
-}
+    expandBy(increment: number): CellExtent {
+        this.upperLeftCell.rowIndex -= increment
+        this.upperLeftCell.columnIndex -= increment
+        this.lowerRightCell.rowIndex += increment
+        this.lowerRightCell.columnIndex += increment
+        return this
+    }
 
-export function getCellExtentThatEncompasses(first: CellExtent, second: CellExtent) {
-    return new CellExtent(
-        {
-            rowIndex: Math.min(first.upperLeftCell.rowIndex, second.upperLeftCell.rowIndex),
-            columnIndex: Math.min(first.upperLeftCell.columnIndex, second.upperLeftCell.columnIndex)        
-        },
-        {
-            rowIndex: Math.max(first.lowerRightCell.rowIndex, second.lowerRightCell.rowIndex),
-            columnIndex: Math.max(first.lowerRightCell.columnIndex, second.lowerRightCell.columnIndex)
-        })
+    getExpandedCellExtentToEncompass(otherCellExtent: CellExtent): CellExtent {
+        return new CellExtent(
+            {
+                rowIndex: Math.min(this.upperLeftCell.rowIndex, otherCellExtent.upperLeftCell.rowIndex),
+                columnIndex: Math.min(this.upperLeftCell.columnIndex, otherCellExtent.upperLeftCell.columnIndex)        
+            },
+            {
+                rowIndex: Math.max(this.lowerRightCell.rowIndex, otherCellExtent.lowerRightCell.rowIndex),
+                columnIndex: Math.max(this.lowerRightCell.columnIndex, otherCellExtent.lowerRightCell.columnIndex)
+            }
+        )
+    }
 }
 
 let liveCells: Cell[] = []
@@ -107,16 +108,10 @@ export function getExtentOfLiveCells () : CellExtent {
     const minColumnIndex: number = Math.min(...columnIndexes)
     const maxColumnIndex: number = Math.max(...columnIndexes)
 
-    const rc: CellExtent = {
-        upperLeftCell: {
-            rowIndex: minRowIndex,
-            columnIndex: minColumnIndex
-        },
-        lowerRightCell: {
-            rowIndex: maxRowIndex,
-            columnIndex: maxColumnIndex
-        }
-    }
+    const rc: CellExtent = new CellExtent(
+        new Cell(minRowIndex, minColumnIndex),
+        new Cell(maxRowIndex, maxColumnIndex)
+    )
     return rc
 }
 
@@ -135,7 +130,7 @@ function deriveNumberOfLiveNeighbors (target: ICell): number {
 
 function deriveNextSetOfLiveCellsFromCurrentLiveCells (): Cell[] {
     const extentOfLiveCellsExpandedBy1: CellExtent =
-        incrementCellExtent(getExtentOfLiveCells(), 1)
+      getExtentOfLiveCells().expandBy(1)
 
     const newLiveCells: Cell[] = []
     for (let rowIndex: number = extentOfLiveCellsExpandedBy1.upperLeftCell.rowIndex; rowIndex <= extentOfLiveCellsExpandedBy1.lowerRightCell.rowIndex; rowIndex++) {
@@ -179,7 +174,7 @@ export function getIterationCount (): number {
     return iterationCount
 }
 
-export function getBornAndSuviveRule (): BornAndSurviveRule {
+export function getBornAndSurviveRule (): BornAndSurviveRule {
     return bornAndSurviveRule
 }
 

@@ -14,7 +14,7 @@ export function ControlHtmlGenerator(boardHtmlGenerator) {
         iterationCountElement.textContent = logic.getIterationCount().toString();
     }
     function deriveRuleDescriptionElement() {
-        const rule = logic.getBornAndSuviveRule();
+        const rule = logic.getBornAndSurviveRule();
         const ruleText = 'Rule: B' + rule.arrBornNeighborCounts.join('') + '/S' + rule.arrSurviveNeighborCounts.join('');
         const textNode = document.createTextNode(ruleText);
         const pElement = document.createElement('p');

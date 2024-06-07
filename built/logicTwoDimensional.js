@@ -1,4 +1,4 @@
-class Cell {
+export class Cell {
     constructor(rowIndex, columnIndex) {
         this.rowIndex = rowIndex;
         this.columnIndex = columnIndex;
@@ -21,22 +21,22 @@ export class CellExtent {
         this.upperLeftCell = upperLeftCell;
         this.lowerRightCell = lowerRightCell;
     }
-}
-function incrementCellExtent(target, increment) {
-    target.upperLeftCell.rowIndex -= increment;
-    target.upperLeftCell.columnIndex -= increment;
-    target.lowerRightCell.rowIndex += increment;
-    target.lowerRightCell.columnIndex += increment;
-    return target;
-}
-export function getCellExtentThatEncompasses(first, second) {
-    return new CellExtent({
-        rowIndex: Math.min(first.upperLeftCell.rowIndex, second.upperLeftCell.rowIndex),
-        columnIndex: Math.min(first.upperLeftCell.columnIndex, second.upperLeftCell.columnIndex)
-    }, {
-        rowIndex: Math.max(first.lowerRightCell.rowIndex, second.lowerRightCell.rowIndex),
-        columnIndex: Math.max(first.lowerRightCell.columnIndex, second.lowerRightCell.columnIndex)
-    });
+    expandBy(increment) {
+        this.upperLeftCell.rowIndex -= increment;
+        this.upperLeftCell.columnIndex -= increment;
+        this.lowerRightCell.rowIndex += increment;
+        this.lowerRightCell.columnIndex += increment;
+        return this;
+    }
+    getExpandedCellExtentToEncompass(otherCellExtent) {
+        return new CellExtent({
+            rowIndex: Math.min(this.upperLeftCell.rowIndex, otherCellExtent.upperLeftCell.rowIndex),
+            columnIndex: Math.min(this.upperLeftCell.columnIndex, otherCellExtent.upperLeftCell.columnIndex)
+        }, {
+            rowIndex: Math.max(this.lowerRightCell.rowIndex, otherCellExtent.lowerRightCell.rowIndex),
+            columnIndex: Math.max(this.lowerRightCell.columnIndex, otherCellExtent.lowerRightCell.columnIndex)
+        });
+    }
 }
 let liveCells = [];
 let iterationCount = 0;
@@ -66,16 +66,7 @@ export function getExtentOfLiveCells() {
     const maxRowIndex = Math.max(...rowIndexes);
     const minColumnIndex = Math.min(...columnIndexes);
     const maxColumnIndex = Math.max(...columnIndexes);
-    const rc = {
-        upperLeftCell: {
-            rowIndex: minRowIndex,
-            columnIndex: minColumnIndex
-        },
-        lowerRightCell: {
-            rowIndex: maxRowIndex,
-            columnIndex: maxColumnIndex
-        }
-    };
+    const rc = new CellExtent(new Cell(minRowIndex, minColumnIndex), new Cell(maxRowIndex, maxColumnIndex));
     return rc;
 }
 export function isThereALiveCellAt(target) {
@@ -90,7 +81,7 @@ function deriveNumberOfLiveNeighbors(target) {
     return liveNeighborCells.length;
 }
 function deriveNextSetOfLiveCellsFromCurrentLiveCells() {
-    const extentOfLiveCellsExpandedBy1 = incrementCellExtent(getExtentOfLiveCells(), 1);
+    const extentOfLiveCellsExpandedBy1 = getExtentOfLiveCells().expandBy(1);
     const newLiveCells = [];
     for (let rowIndex = extentOfLiveCellsExpandedBy1.upperLeftCell.rowIndex; rowIndex <= extentOfLiveCellsExpandedBy1.lowerRightCell.rowIndex; rowIndex++) {
         for (let columnIndex = extentOfLiveCellsExpandedBy1.upperLeftCell.columnIndex; columnIndex <= extentOfLiveCellsExpandedBy1.lowerRightCell.columnIndex; columnIndex++) {
@@ -126,7 +117,7 @@ export function clearLiveCells() {
 export function getIterationCount() {
     return iterationCount;
 }
-export function getBornAndSuviveRule() {
+export function getBornAndSurviveRule() {
     return bornAndSurviveRule;
 }
 export function setBornAndSurviveRule(rule) {

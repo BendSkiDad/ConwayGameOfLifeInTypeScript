@@ -9,16 +9,7 @@ rootElement.appendChild(boardContainerElement);
 logic.clearLiveCells();
 logic.addSimpleGliderGoingUpAndLeft({ rowIndex: 2, columnIndex: 2 });
 logic.addSimpleGliderGoingDownAndRight({ rowIndex: 7, columnIndex: 7 });
-const startingBoardExtent = {
-    upperLeftCell: {
-        rowIndex: 1,
-        columnIndex: 1
-    },
-    lowerRightCell: {
-        rowIndex: 10,
-        columnIndex: 20
-    }
-};
+const startingBoardExtent = new logic.CellExtent(new logic.Cell(1, 1), new logic.Cell(10, 20));
 const boardHtmlGenerator = BoardHtmlGenerator(startingBoardExtent, boardContainerElement);
 const controlHtmlGenerator = ControlHtmlGenerator(boardHtmlGenerator);
 boardHtmlGenerator.updateBoardElement();
