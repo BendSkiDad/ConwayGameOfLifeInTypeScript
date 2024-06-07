@@ -25,18 +25,18 @@ export function ControlHtmlGenerator (boardHtmlGenerator: IBoardHtmlGenerator) :
   
     function deriveRuleDescriptionElement (): HTMLParagraphElement {
         const rule: logic.BornAndSurviveRule = logic.getBornAndSurviveRule()
-        const ruleText = 'Rule: B' + rule.arrBornNeighborCounts.join('') + '/S' + rule.arrSurviveNeighborCounts.join('')
-        const textNode = document.createTextNode(ruleText)
-        const pElement = document.createElement('p')
+        const ruleText: string = 'Rule: B' + rule.arrBornNeighborCounts.join('') + '/S' + rule.arrSurviveNeighborCounts.join('')
+        const textNode: Text = document.createTextNode(ruleText)
+        const pElement: HTMLParagraphElement = document.createElement('p')
         pElement.appendChild(textNode)
         return pElement
     }
   
     function deriveIterationCountParagraph (iterationCount: number): HTMLParagraphElement {
-        const labelTextNode = document.createTextNode('Iteration Count:')
-        const countTextNode = document.createTextNode(iterationCount.toString())
+        const labelTextNode: Text = document.createTextNode('Iteration Count:')
+        const countTextNode: Text = document.createTextNode(iterationCount.toString())
         iterationCountElement.appendChild(countTextNode)
-        const pElement = document.createElement('p')
+        const pElement: HTMLParagraphElement = document.createElement('p')
         pElement.appendChild(labelTextNode)
         pElement.appendChild(iterationCountElement)
         return pElement
@@ -62,6 +62,7 @@ export function ControlHtmlGenerator (boardHtmlGenerator: IBoardHtmlGenerator) :
             deriveButton('Add Column', handleAddColumnClick)
         const resetButton: HTMLInputElement =
             deriveButton('Clear', handleClearClick)
+
         const buttonContainerElement: HTMLDivElement =
             document.createElement('div')
         buttonContainerElement.appendChild(advanceOneStepButton)
@@ -80,17 +81,6 @@ export function ControlHtmlGenerator (boardHtmlGenerator: IBoardHtmlGenerator) :
         buttonContainerElement.appendChild(saveButton)
 
         return buttonContainerElement
-    }
-
-    function handleSaveClick (): void {
-        const saveNameElement: HTMLInputElement = document.getElementById('idSaveName') as HTMLInputElement
-        const saveName : string = saveNameElement.value
-        if (saveName) {
-            const liveCellsAsJSON = logic.liveCellsAsJSON()
-            alert('the JSON below should be saved with this name: ' + saveName + ' ' + liveCellsAsJSON)
-        } else {
-            alert('please enter a save name')
-        }
     }
 
     function controlElements (iterationCount: number): HTMLElement[] {
@@ -154,9 +144,20 @@ export function ControlHtmlGenerator (boardHtmlGenerator: IBoardHtmlGenerator) :
     function handleRunClick (): void {
         if (isRunning) {
             stop()
-      } else {
+        } else {
             start()
-      }
+        }
+    }
+
+    function handleSaveClick (): void {
+        const saveNameElement: HTMLInputElement = document.getElementById('idSaveName') as HTMLInputElement
+        const saveName : string = saveNameElement.value
+        if (saveName) {
+            const liveCellsAsJSON = logic.liveCellsAsJSON()
+            alert('the JSON below should be saved with this name: ' + saveName + ' ' + liveCellsAsJSON)
+        } else {
+            alert('please enter a save name')
+        }
     }
 
     const rc: IControlHtmlGenerator = {

@@ -59,17 +59,6 @@ export function ControlHtmlGenerator(boardHtmlGenerator) {
         buttonContainerElement.appendChild(saveButton);
         return buttonContainerElement;
     }
-    function handleSaveClick() {
-        const saveNameElement = document.getElementById('idSaveName');
-        const saveName = saveNameElement.value;
-        if (saveName) {
-            const liveCellsAsJSON = logic.liveCellsAsJSON();
-            alert('the JSON below should be saved with this name: ' + saveName + ' ' + liveCellsAsJSON);
-        }
-        else {
-            alert('please enter a save name');
-        }
-    }
     function controlElements(iterationCount) {
         const ruleDescriptionElement = deriveRuleDescriptionElement();
         const iterationCountParagraphElement = deriveIterationCountParagraph(iterationCount);
@@ -123,6 +112,17 @@ export function ControlHtmlGenerator(boardHtmlGenerator) {
         }
         else {
             start();
+        }
+    }
+    function handleSaveClick() {
+        const saveNameElement = document.getElementById('idSaveName');
+        const saveName = saveNameElement.value;
+        if (saveName) {
+            const liveCellsAsJSON = logic.liveCellsAsJSON();
+            alert('the JSON below should be saved with this name: ' + saveName + ' ' + liveCellsAsJSON);
+        }
+        else {
+            alert('please enter a save name');
         }
     }
     const rc = {
