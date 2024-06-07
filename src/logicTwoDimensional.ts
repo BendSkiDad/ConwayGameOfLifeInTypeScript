@@ -34,35 +34,34 @@ class Cell implements ICell {
 }
 
 export class CellExtent {
-    upperLeft: ICell
-    lowerRight: ICell
+    upperLeftCell: ICell
+    lowerRightCell: ICell
 
-    constructor(upperLeft: ICell, lowerRight: ICell) {
-        this.upperLeft = upperLeft
-        this.lowerRight = lowerRight
+    constructor(upperLeftCell: ICell, lowerRightCell: ICell) {
+        this.upperLeftCell = upperLeftCell
+        this.lowerRightCell = lowerRightCell
     }
 }
 
 function incrementCellExtent (target: CellExtent, increment: number): CellExtent {
-    target.upperLeft.rowIndex -= increment
-    target.upperLeft.columnIndex -= increment
-    target.lowerRight.rowIndex += increment
-    target.lowerRight.columnIndex += increment
+    target.upperLeftCell.rowIndex -= increment
+    target.upperLeftCell.columnIndex -= increment
+    target.lowerRightCell.rowIndex += increment
+    target.lowerRightCell.columnIndex += increment
     return target
 }
 
 export function getCellExtentThatEncompasses(first: CellExtent, second: CellExtent) {
     return new CellExtent(
         {
-            rowIndex: Math.min(first.upperLeft.rowIndex, second.upperLeft.rowIndex),
-            columnIndex: Math.min(first.upperLeft.columnIndex, second.upperLeft.columnIndex)        
+            rowIndex: Math.min(first.upperLeftCell.rowIndex, second.upperLeftCell.rowIndex),
+            columnIndex: Math.min(first.upperLeftCell.columnIndex, second.upperLeftCell.columnIndex)        
         },
         {
-            rowIndex: Math.max(first.lowerRight.rowIndex, second.lowerRight.rowIndex),
-            columnIndex: Math.max(first.lowerRight.columnIndex, second.lowerRight.columnIndex)
+            rowIndex: Math.max(first.lowerRightCell.rowIndex, second.lowerRightCell.rowIndex),
+            columnIndex: Math.max(first.lowerRightCell.columnIndex, second.lowerRightCell.columnIndex)
         })
 }
-
 
 let liveCells: Cell[] = []
 let iterationCount: number = 0
@@ -109,11 +108,11 @@ export function getExtentOfLiveCells () : CellExtent {
     const maxColumnIndex: number = Math.max(...columnIndexes)
 
     const rc: CellExtent = {
-        upperLeft: {
+        upperLeftCell: {
             rowIndex: minRowIndex,
             columnIndex: minColumnIndex
         },
-        lowerRight: {
+        lowerRightCell: {
             rowIndex: maxRowIndex,
             columnIndex: maxColumnIndex
         }
@@ -139,8 +138,8 @@ function deriveNextSetOfLiveCellsFromCurrentLiveCells (): Cell[] {
         incrementCellExtent(getExtentOfLiveCells(), 1)
 
     const newLiveCells: Cell[] = []
-    for (let rowIndex: number = extentOfLiveCellsExpandedBy1.upperLeft.rowIndex; rowIndex <= extentOfLiveCellsExpandedBy1.lowerRight.rowIndex; rowIndex++) {
-      for (let columnIndex: number = extentOfLiveCellsExpandedBy1.upperLeft.columnIndex; columnIndex <= extentOfLiveCellsExpandedBy1.lowerRight.columnIndex; columnIndex++) {
+    for (let rowIndex: number = extentOfLiveCellsExpandedBy1.upperLeftCell.rowIndex; rowIndex <= extentOfLiveCellsExpandedBy1.lowerRightCell.rowIndex; rowIndex++) {
+      for (let columnIndex: number = extentOfLiveCellsExpandedBy1.upperLeftCell.columnIndex; columnIndex <= extentOfLiveCellsExpandedBy1.lowerRightCell.columnIndex; columnIndex++) {
         const target: ICell = {rowIndex: rowIndex, columnIndex: columnIndex }
         const liveNeighborCount: number =
           deriveNumberOfLiveNeighbors(target)

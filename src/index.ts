@@ -12,14 +12,14 @@ logic.clearLiveCells()
 logic.addSimpleGliderGoingUpAndLeft({ rowIndex: 2, columnIndex: 2 })
 logic.addSimpleGliderGoingDownAndRight({ rowIndex: 7, columnIndex: 7 })
 
-let startingBoardExtent: logic.CellExtent = {
-    upperLeft: {
+const startingBoardExtent: logic.CellExtent = {
+    upperLeftCell: {
         rowIndex: 1,
         columnIndex: 1
     },
-    lowerRight: {
+    lowerRightCell: {
         rowIndex: 10,
-        columnIndex: 10
+        columnIndex: 20
     }
 }
 const boardHtmlGenerator: IBoardHtmlGenerator =

@@ -1,18 +1,24 @@
 import * as logic from "./logicTwoDimensional.js";
 export function BoardHtmlGenerator(startingBoardExtent, boardContainerElement) {
     let currentBoardExtent = startingBoardExtent;
-    const cellWidth = 13;
+    const cellWidth = 20;
     const cellHeight = cellWidth;
     const lineBetweenCellsWidth = 1;
     function updateCurrentBoardExtentToReflectLiveCells() {
-        const liveCellsExtent = logic.getExtentOfLiveCells();
-        currentBoardExtent = logic.getCellExtentThatEncompasses(currentBoardExtent, liveCellsExtent);
+        const extentOfLiveCells = logic.getExtentOfLiveCells();
+        currentBoardExtent = logic.getCellExtentThatEncompasses(currentBoardExtent, extentOfLiveCells);
     }
-    function generateBoardAsCanvasHtmlElementFrom() {
-        const columnCount = currentBoardExtent.lowerRight.columnIndex -
-            currentBoardExtent.upperLeft.columnIndex + 1;
-        const rowCount = currentBoardExtent.lowerRight.rowIndex -
-            currentBoardExtent.upperLeft.rowIndex + 1;
+    function deriveColumnCount() {
+        return currentBoardExtent.lowerRightCell.columnIndex -
+            currentBoardExtent.upperLeftCell.columnIndex + 1;
+    }
+    function deriveRowCount() {
+        return currentBoardExtent.lowerRightCell.rowIndex -
+            currentBoardExtent.upperLeftCell.rowIndex + 1;
+    }
+    function generateBoardAsCanvasHtmlElement() {
+        const columnCount = deriveColumnCount();
+        const rowCount = deriveRowCount();
         const canvasElement = document.createElement('canvas');
         canvasElement.setAttribute('id', 'idCanvas');
         canvasElement.width = (columnCount * cellWidth) + lineBetweenCellsWidth;
@@ -21,48 +27,72 @@ export function BoardHtmlGenerator(startingBoardExtent, boardContainerElement) {
         const ctx = canvasElement.getContext('2d');
         ctx.strokeStyle = 'blue';
         ctx.lineWidth = lineBetweenCellsWidth;
-        ctx.fillStyle = 'grey';
         for (let canvasColumnIndex = 0; canvasColumnIndex < columnCount; canvasColumnIndex++) {
             for (let canvasRowIndex = 0; canvasRowIndex < rowCount; canvasRowIndex++) {
-                const xCoord = cellWidth * canvasColumnIndex + lineBetweenCellsWidth / 2;
-                const yCoord = cellHeight * canvasRowIndex + lineBetweenCellsWidth / 2;
-                const logicRowIndex = canvasRowIndex + currentBoardExtent.upperLeft.rowIndex;
-                const logicColumnIndex = canvasColumnIndex + currentBoardExtent.upperLeft.columnIndex;
+                const xCoord = lineBetweenCellsWidth / 2 + (cellWidth * canvasColumnIndex);
+                const yCoord = lineBetweenCellsWidth / 2 + (cellHeight * canvasRowIndex);
+                const logicRowIndex = canvasRowIndex + currentBoardExtent.upperLeftCell.rowIndex;
+                const logicColumnIndex = canvasColumnIndex + currentBoardExtent.upperLeftCell.columnIndex;
                 if (logic.isThereALiveCellAt({ rowIndex: logicRowIndex, columnIndex: logicColumnIndex })) {
                     ctx.fillStyle = 'yellow';
                 }
+                else {
+                    ctx.fillStyle = 'grey';
+                }
                 ctx.fillRect(xCoord, yCoord, cellWidth, cellHeight);
                 ctx.strokeRect(xCoord, yCoord, cellWidth, cellHeight);
-                ctx.fillStyle = 'grey';
             }
         }
         return canvasElement;
     }
+    function deriveRowIndexFromOffsetY(offsetY) {
+        const edgeCellHeight = cellHeight + lineBetweenCellsWidth / 2;
+        const canvasHeight = (deriveRowCount() * cellHeight) + lineBetweenCellsWidth;
+        const topOfBottomCellOffset = canvasHeight - edgeCellHeight;
+        if (offsetY < edgeCellHeight) {
+            return currentBoardExtent.upperLeftCell.rowIndex;
+        }
+        else if (offsetY > topOfBottomCellOffset) {
+            return currentBoardExtent.lowerRightCell.rowIndex;
+        }
+        else {
+            return Math.trunc((offsetY - edgeCellHeight) / cellHeight) + 1 + currentBoardExtent.upperLeftCell.rowIndex;
+        }
+    }
+    function deriveColumnIndexFromOffsetX(offsetX) {
+        const edgeCellWidth = cellHeight + lineBetweenCellsWidth / 2;
+        const canvasWidth = (deriveColumnCount() * cellWidth) + lineBetweenCellsWidth;
+        const leftOfRightCellOffset = canvasWidth - edgeCellWidth;
+        if (offsetX < edgeCellWidth) {
+            return currentBoardExtent.upperLeftCell.columnIndex;
+        }
+        else if (offsetX > leftOfRightCellOffset) {
+            return currentBoardExtent.lowerRightCell.columnIndex;
+        }
+        else {
+            return Math.trunc((offsetX - edgeCellWidth) / cellWidth) + 1 + currentBoardExtent.upperLeftCell.columnIndex;
+        }
+    }
     function handleCanvasClick(e) {
-        const coordinates = {
-            rowIndex: Math.trunc(e.offsetY / (cellHeight + lineBetweenCellsWidth / 2)) + currentBoardExtent.upperLeft.rowIndex,
-            columnIndex: Math.trunc(e.offsetX / (cellWidth + lineBetweenCellsWidth / 2)) + currentBoardExtent.upperLeft.columnIndex
+        const cell = {
+            rowIndex: deriveRowIndexFromOffsetY(e.offsetY),
+            columnIndex: deriveColumnIndexFromOffsetX(e.offsetX)
         };
-        logic.toggleCellLiveness(coordinates);
+        logic.toggleCellLiveness(cell);
         updateBoardElement();
     }
     function addRow() {
         updateCurrentBoardExtentToReflectLiveCells();
-        currentBoardExtent.lowerRight.rowIndex += 1;
+        currentBoardExtent.lowerRightCell.rowIndex += 1;
     }
     function addColumn() {
         updateCurrentBoardExtentToReflectLiveCells();
-        currentBoardExtent.lowerRight.columnIndex += 1;
+        currentBoardExtent.lowerRightCell.columnIndex += 1;
     }
     function updateBoardElement() {
         updateCurrentBoardExtentToReflectLiveCells();
-        const boardAsHtmlCanvasElement = generateBoardAsCanvasHtmlElementFrom();
+        const boardAsHtmlCanvasElement = generateBoardAsCanvasHtmlElement();
         boardContainerElement.replaceChildren(boardAsHtmlCanvasElement);
-        // const liveCellsAsJSON = logic.liveCellsAsJSON()
-        // const textNode = document.createTextNode(liveCellsAsJSON)
-        // const pElement = document.createElement('p')
-        // pElement.appendChild(textNode)
-        // boardContainerElement.replaceChildren(boardAsHtmlCanvasElement, pElement)
     }
     const rc = {
         addRow,
