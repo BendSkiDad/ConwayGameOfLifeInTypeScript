@@ -14,9 +14,18 @@
     <h1>Conway's Game of Life in Typescript</h1>
   </header>
   <main>
+    <p>Loading content from the API: <b id="name">...</b></p>
     <div id="root"></div>
   </main>
   <a href="help.html">Help</a>
+
+<script>
+      (async function() {
+      const text = await( await fetch(`/api/boards?name=tom`)).text();
+      document.querySelector(`#name`).textContent = text;
+    }());
+</script>
+
 </body>
 
 </html>
