@@ -1,6 +1,7 @@
 import * as logic from "./logicTwoDimensional.js";
 import { BoardHtmlGenerator } from "./boardHtmlGenerator.js";
 import { ControlHtmlGenerator } from "./ControlHtmlGenerator.js";
+import { SavedBoardsHtmlGenerator } from "./savedBoardsHtmlGenerator.js";
 // create and add a container element for the board
 const boardContainerElement = document.createElement('p');
 boardContainerElement.setAttribute('id', 'board');
@@ -19,3 +20,6 @@ const controlElements = controlHtmlGenerator.controlElements(0); // iterationCou
 controlElements.forEach(element => {
     rootElement.appendChild(element);
 });
+const savedBoardsHtmlGenerator = SavedBoardsHtmlGenerator();
+const savedBoardsElement = await savedBoardsHtmlGenerator.savedBoardsElement();
+rootElement.appendChild(savedBoardsElement);
