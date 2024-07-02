@@ -1,7 +1,7 @@
-function deriveUnorderedListElement(listItemContents: HTMLElement[]): HTMLUListElement {
-    const listItems: HTMLLIElement[] = listItemContents.map(function(listItemContent: HTMLElement) {
+function deriveUnorderedListElement(listItemContents: HTMLElement[] | string[]): HTMLUListElement {
+    const listItems: HTMLLIElement[] = listItemContents.map(function(listItemContent: HTMLElement | string) {
         const rc: HTMLLIElement = document.createElement('li')
-        rc.appendChild(listItemContent)
+        rc.append(listItemContent)
         return rc
     })
     const rc: HTMLUListElement = document.createElement('ul')
@@ -28,16 +28,14 @@ interface ISavedBoard {
 
 function deriveBoardsListElement(boards: ISavedBoard[]): HTMLUListElement {
     const spanElements: HTMLSpanElement[] = boards.map(function(board: ISavedBoard): HTMLSpanElement {
-        const spanElement: HTMLSpanElement = document.createElement('span')
-        spanElement.append(board.name)
-        const liveCellListItemElements: HTMLSpanElement[] = board.liveCells.map(function(liveCell): HTMLSpanElement {
-            const rc = document.createElement('span')
-            rc.append("row: " + liveCell.rowIndex + " column: " + liveCell.columnIndex)
-            return rc
+        const rc: HTMLSpanElement = document.createElement('span')
+        rc.append(board.name)
+        const liveCellListItemElements: string[] = board.liveCells.map(function(liveCell): string {
+            return "row: " + liveCell.rowIndex + " column: " + liveCell.columnIndex
         })
         const liveCellsListElement: HTMLUListElement = deriveUnorderedListElement(liveCellListItemElements)
-        spanElement.append(liveCellsListElement)
-        return spanElement
+        rc.appendChild(liveCellsListElement)
+        return rc
     })
     const rc: HTMLUListElement = deriveUnorderedListElement(spanElements)
     return rc

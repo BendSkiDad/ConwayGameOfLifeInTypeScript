@@ -1,7 +1,7 @@
 function deriveUnorderedListElement(listItemContents) {
     const listItems = listItemContents.map(function (listItemContent) {
         const rc = document.createElement('li');
-        rc.appendChild(listItemContent);
+        rc.append(listItemContent);
         return rc;
     });
     const rc = document.createElement('ul');
@@ -16,16 +16,14 @@ function deriveHeaderElement() {
 }
 function deriveBoardsListElement(boards) {
     const spanElements = boards.map(function (board) {
-        const spanElement = document.createElement('span');
-        spanElement.append(board.name);
+        const rc = document.createElement('span');
+        rc.append(board.name);
         const liveCellListItemElements = board.liveCells.map(function (liveCell) {
-            const rc = document.createElement('span');
-            rc.append("row: " + liveCell.rowIndex + " column: " + liveCell.columnIndex);
-            return rc;
+            return "row: " + liveCell.rowIndex + " column: " + liveCell.columnIndex;
         });
         const liveCellsListElement = deriveUnorderedListElement(liveCellListItemElements);
-        spanElement.append(liveCellsListElement);
-        return spanElement;
+        rc.appendChild(liveCellsListElement);
+        return rc;
     });
     const rc = deriveUnorderedListElement(spanElements);
     return rc;
