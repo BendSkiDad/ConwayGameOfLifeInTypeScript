@@ -3,7 +3,6 @@ import { IBoardHtmlGenerator } from "./boardHtmlGenerator.js"
 import { ISavedBoard, SavedBoardsHtmlGenerator, ISavedBoardsHtmlGenerator } from "./savedBoardsHtmlGenerator.js"
 
 export interface IControlHtmlGenerator {
-    controlElements: Function,
     iterationCountContainerElement: HTMLParagraphElement,
     advanceOneStepButtonElement: HTMLInputElement,
     addRowButtonElement: HTMLInputElement,
@@ -32,8 +31,6 @@ export function ControlHtmlGenerator (boardHtmlGenerator: IBoardHtmlGenerator, s
         deriveButton('Clear', handleClearClick)
     const saveContainerElement: HTMLParagraphElement =
         deriveSaveContainerElement()
-    const buttonsContainerElement: HTMLElement =
-        deriveButtonsContainerElement()
     let interval: number = 0
     let isRunning: boolean = false
 
@@ -79,18 +76,6 @@ export function ControlHtmlGenerator (boardHtmlGenerator: IBoardHtmlGenerator, s
         return button
     }
 
-    function deriveButtonsContainerElement (): HTMLElement {
-        const buttonContainerElement: HTMLDivElement =
-            document.createElement('div')
-        buttonContainerElement.appendChild(advanceOneStepButtonElement)
-        buttonContainerElement.appendChild(addRowButtonElement)
-        buttonContainerElement.appendChild(addColumnButtonElement)
-        buttonContainerElement.appendChild(resetButtonElement)
-        buttonContainerElement.appendChild(runButtonElement)
-        buttonContainerElement.appendChild(saveContainerElement)
-        return buttonContainerElement
-    }
-
     function deriveSaveContainerElement(): HTMLParagraphElement {
         const textInputElement : HTMLInputElement =
             document.createElement('input')
@@ -104,13 +89,6 @@ export function ControlHtmlGenerator (boardHtmlGenerator: IBoardHtmlGenerator, s
         return pElement
     }
 
-    function controlElements (): HTMLElement[] {
-        return [
-            iterationCountContainerElement,
-            buttonsContainerElement,
-            ruleDescriptionElement]
-    }
-  
     // event handlers and their helper methods
     function advanceOneStepAndUpdateHtml (): void {
         logic.advanceOneStep()
@@ -197,7 +175,6 @@ export function ControlHtmlGenerator (boardHtmlGenerator: IBoardHtmlGenerator, s
     }
 
     const rc: IControlHtmlGenerator = {
-        controlElements,
         iterationCountContainerElement,
         advanceOneStepButtonElement,
         addRowButtonElement,

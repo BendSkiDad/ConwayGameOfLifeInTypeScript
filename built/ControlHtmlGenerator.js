@@ -10,7 +10,6 @@ export function ControlHtmlGenerator(boardHtmlGenerator, startingIterationCount)
     const addColumnButtonElement = deriveButton('Add Column', handleAddColumnClick);
     const resetButtonElement = deriveButton('Clear', handleClearClick);
     const saveContainerElement = deriveSaveContainerElement();
-    const buttonsContainerElement = deriveButtonsContainerElement();
     let interval = 0;
     let isRunning = false;
     function renderRunStopButtonAsRun() {
@@ -49,16 +48,6 @@ export function ControlHtmlGenerator(boardHtmlGenerator, startingIterationCount)
         button.classList.add('button');
         return button;
     }
-    function deriveButtonsContainerElement() {
-        const buttonContainerElement = document.createElement('div');
-        buttonContainerElement.appendChild(advanceOneStepButtonElement);
-        buttonContainerElement.appendChild(addRowButtonElement);
-        buttonContainerElement.appendChild(addColumnButtonElement);
-        buttonContainerElement.appendChild(resetButtonElement);
-        buttonContainerElement.appendChild(runButtonElement);
-        buttonContainerElement.appendChild(saveContainerElement);
-        return buttonContainerElement;
-    }
     function deriveSaveContainerElement() {
         const textInputElement = document.createElement('input');
         textInputElement.setAttribute('type', 'text');
@@ -68,13 +57,6 @@ export function ControlHtmlGenerator(boardHtmlGenerator, startingIterationCount)
         pElement.appendChild(textInputElement);
         pElement.appendChild(saveButtonElement);
         return pElement;
-    }
-    function controlElements() {
-        return [
-            iterationCountContainerElement,
-            buttonsContainerElement,
-            ruleDescriptionElement
-        ];
     }
     // event handlers and their helper methods
     function advanceOneStepAndUpdateHtml() {
@@ -149,7 +131,6 @@ export function ControlHtmlGenerator(boardHtmlGenerator, startingIterationCount)
         }
     }
     const rc = {
-        controlElements,
         iterationCountContainerElement,
         advanceOneStepButtonElement,
         addRowButtonElement,
