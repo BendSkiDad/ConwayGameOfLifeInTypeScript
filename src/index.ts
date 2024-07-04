@@ -3,12 +3,6 @@ import { BoardHtmlGenerator, IBoardHtmlGenerator } from "./boardHtmlGenerator.js
 import { ControlHtmlGenerator, IControlHtmlGenerator } from "./ControlHtmlGenerator.js"
 import { ISavedBoard, SavedBoardsHtmlGenerator, ISavedBoardsHtmlGenerator } from "./savedBoardsHtmlGenerator.js"
 
-// create and add a container element for the board
-const boardContainerElement: HTMLParagraphElement = document.createElement('p')
-boardContainerElement.setAttribute('id', 'board')
-const rootElement: HTMLElement = document.getElementById('root') as HTMLElement
-rootElement.appendChild(boardContainerElement)
-
 logic.clearLiveCells()
 logic.addSimpleGliderGoingUpAndLeft({ rowIndex: 2, columnIndex: 2 })
 logic.addSimpleGliderGoingDownAndRight({ rowIndex: 7, columnIndex: 7 })
@@ -20,17 +14,30 @@ const startingBoardExtent: logic.CellExtent =
       startingUpperLeftCell,
       startingLowerRightCell
   )
+
+const rootElement: HTMLElement = document.getElementById('root') as HTMLElement
+
+// create container elements
+const boardContainerElement: HTMLParagraphElement = document.createElement('p')
+const buttonContainerElement: HTMLParagraphElement = document.createElement('p')
+
 const boardHtmlGenerator: IBoardHtmlGenerator =
     BoardHtmlGenerator(startingBoardExtent, boardContainerElement)
+boardHtmlGenerator.updateBoardElement()
 const startingIterationCount: number = 0
 const controlHtmlGenerator : IControlHtmlGenerator =
     ControlHtmlGenerator(boardHtmlGenerator, startingIterationCount)
-boardHtmlGenerator.updateBoardElement()
-const controlElements: HTMLElement[] =
-    controlHtmlGenerator.controlElements()
-controlElements.forEach(element => {
-    rootElement.appendChild(element)
-})
+
+buttonContainerElement.appendChild(controlHtmlGenerator.advanceOneStepButtonElement)
+buttonContainerElement.appendChild(controlHtmlGenerator.addRowButtonElement)
+buttonContainerElement.appendChild(controlHtmlGenerator.addColumnButtonElement)
+buttonContainerElement.appendChild(controlHtmlGenerator.resetButtonElement)
+buttonContainerElement.appendChild(controlHtmlGenerator.runButtonElement)
+
+rootElement.appendChild(controlHtmlGenerator.ruleDescriptionElement)
+rootElement.appendChild(boardContainerElement)
+rootElement.appendChild(buttonContainerElement)
+rootElement.appendChild(controlHtmlGenerator.saveContainerElement)
 
 const response: Response = await fetch(`/api/boards`)
 const savedBoardsJson = await response.json()
