@@ -4,7 +4,7 @@ export function ControlHtmlGenerator(boardHtmlGenerator, startingIterationCount)
     const runButtonElement = deriveButton('Run', handleRunClick);
     const iterationCountElement = document.createElement('span');
     const ruleDescriptionElement = deriveRuleDescriptionElement();
-    const iterationCountParagraphElement = deriveIterationCountParagraph(startingIterationCount);
+    const iterationCountContainerElement = deriveIterationCountParagraph(startingIterationCount);
     const advanceOneStepButtonElement = deriveButton('Advance a step', handleAdvanceAStepClick);
     const addRowButtonElement = deriveButton('Add Row', handleAddRowClick);
     const addColumnButtonElement = deriveButton('Add Column', handleAddColumnClick);
@@ -71,7 +71,7 @@ export function ControlHtmlGenerator(boardHtmlGenerator, startingIterationCount)
     }
     function controlElements() {
         return [
-            iterationCountParagraphElement,
+            iterationCountContainerElement,
             buttonsContainerElement,
             ruleDescriptionElement
         ];

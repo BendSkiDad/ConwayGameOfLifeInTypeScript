@@ -12,7 +12,7 @@ export function ControlHtmlGenerator (boardHtmlGenerator: IBoardHtmlGenerator, s
     const iterationCountElement: HTMLSpanElement =
         document.createElement('span')
     const ruleDescriptionElement: HTMLElement = deriveRuleDescriptionElement()
-    const iterationCountParagraphElement: HTMLElement =
+    const iterationCountContainerElement: HTMLParagraphElement =
         deriveIterationCountParagraph(startingIterationCount)
     const advanceOneStepButtonElement: HTMLInputElement =
         deriveButton('Advance a step', handleAdvanceAStepClick)
@@ -97,7 +97,7 @@ export function ControlHtmlGenerator (boardHtmlGenerator: IBoardHtmlGenerator, s
 
     function controlElements (): HTMLElement[] {
         return [
-            iterationCountParagraphElement,
+            iterationCountContainerElement,
             buttonsContainerElement,
             ruleDescriptionElement]
     }
