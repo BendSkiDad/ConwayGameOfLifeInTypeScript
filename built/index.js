@@ -24,5 +24,5 @@ const response = await fetch(`/api/boards`);
 const savedBoardsJson = await response.json();
 const savedBoards = savedBoardsJson.boards;
 const savedBoardsHtmlGenerator = SavedBoardsHtmlGenerator();
-const savedBoardsElement = savedBoardsHtmlGenerator.savedBoardsElement(savedBoards);
+const savedBoardsElement = savedBoardsHtmlGenerator.getSavedBoardsElement(savedBoards);
 rootElement.appendChild(savedBoardsElement);

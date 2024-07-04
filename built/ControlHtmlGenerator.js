@@ -135,7 +135,7 @@ export function ControlHtmlGenerator(boardHtmlGenerator) {
             const savedBoardsJson = await response.json();
             const savedBoards = savedBoardsJson.boards;
             const savedBoardsHtmlGenerator = SavedBoardsHtmlGenerator();
-            savedBoardsHtmlGenerator.savedBoardsElement(savedBoards);
+            savedBoardsHtmlGenerator.getSavedBoardsElement(savedBoards);
             //todo: update the list of saved boards here
         }
         else {

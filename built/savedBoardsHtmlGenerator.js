@@ -29,7 +29,7 @@ function deriveBoardsListElement(boards) {
     return rc;
 }
 export function SavedBoardsHtmlGenerator() {
-    function savedBoardsElement(boards) {
+    function getSavedBoardsElement(boards) {
         const rc = document.createElement('p');
         const headerElement = deriveHeaderElement();
         rc.appendChild(headerElement);
@@ -38,7 +38,7 @@ export function SavedBoardsHtmlGenerator() {
         return rc;
     }
     const rc = {
-        savedBoardsElement
+        getSavedBoardsElement: getSavedBoardsElement
     };
     return rc;
 }

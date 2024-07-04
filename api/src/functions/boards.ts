@@ -2,6 +2,7 @@ import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/fu
 
 let boards = [
     {
+        id: 1,
         name: 'simple repeater',
         liveCells: [
             { rowIndex: 2, columnIndex: 15 },
@@ -10,6 +11,7 @@ let boards = [
         ]
     },
     {
+        id: 2,
         name: 'diagnol gliders',
         liveCells: [
             { rowIndex: 2, columnIndex: 2 },
@@ -33,6 +35,7 @@ interface ICell {
 }
 
 interface ISavedBoard {
+    id: number,
     name: string,
     liveCells: ICell[]
 }
@@ -46,13 +49,24 @@ function instanceOfISavedBoard(object: any): object is ISavedBoard {
 
 export async function getBoards(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
     context.log(`Http function processed request for url "${request.url}"`);
-    if(request.method === "POST") {
-        const possibleSavedBoardObject = await request.json()
-        if(instanceOfISavedBoard(possibleSavedBoardObject)) {
-            boards.push(possibleSavedBoardObject)
-        }
+    let returnStatus: number = 200
+    switch(request.method) {
+        case "GET":
+            break;
+        case "POST": 
+            const possibleSavedBoardObject = await request.json()
+            if(instanceOfISavedBoard(possibleSavedBoardObject)) {
+                boards.push(possibleSavedBoardObject)
+                returnStatus = 201
+            } else {
+                returnStatus = 400
+            }
+            break
+        case "DELETE":
+            returnStatus = 405
     }
     return {
+        status: returnStatus,
         jsonBody: {
             boards: boards
         }
@@ -60,7 +74,7 @@ export async function getBoards(request: HttpRequest, context: InvocationContext
 };
 
 app.http('boards', {
-    methods: ['GET', 'POST'],
+    methods: ['GET', 'POST', 'DELETE'],
     authLevel: 'anonymous',
     handler: getBoards
 });

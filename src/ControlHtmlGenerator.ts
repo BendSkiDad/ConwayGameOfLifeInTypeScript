@@ -174,7 +174,7 @@ export function ControlHtmlGenerator (boardHtmlGenerator: IBoardHtmlGenerator) :
             const savedBoards: ISavedBoard[] = savedBoardsJson.boards
             
             const savedBoardsHtmlGenerator: ISavedBoardsHtmlGenerator = SavedBoardsHtmlGenerator()
-            savedBoardsHtmlGenerator.savedBoardsElement(savedBoards)
+            savedBoardsHtmlGenerator.getSavedBoardsElement(savedBoards)
 
             //todo: update the list of saved boards here
         } else {

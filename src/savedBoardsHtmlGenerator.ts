@@ -30,6 +30,7 @@ function deriveBoardsListElement(boards: ISavedBoard[]): HTMLUListElement {
     const spanElements: HTMLSpanElement[] = boards.map(function(board: ISavedBoard): HTMLSpanElement {
         const rc: HTMLSpanElement = document.createElement('span')
         rc.append(board.name)
+        
         const liveCellListItemElements: string[] = board.liveCells.map(function(liveCell): string {
             return "row: " + liveCell.rowIndex + " column: " + liveCell.columnIndex
         })
@@ -42,11 +43,11 @@ function deriveBoardsListElement(boards: ISavedBoard[]): HTMLUListElement {
 }
 
 export interface ISavedBoardsHtmlGenerator {
-    savedBoardsElement: Function
+    getSavedBoardsElement: Function
 }
 
 export function SavedBoardsHtmlGenerator() : ISavedBoardsHtmlGenerator {
-    function savedBoardsElement (boards: ISavedBoard[]): HTMLParagraphElement {
+    function getSavedBoardsElement (boards: ISavedBoard[]): HTMLParagraphElement {
         const rc: HTMLParagraphElement = document.createElement('p')
         const headerElement: HTMLElement = deriveHeaderElement()
         rc.appendChild(headerElement)
@@ -57,7 +58,7 @@ export function SavedBoardsHtmlGenerator() : ISavedBoardsHtmlGenerator {
     }
 
     const rc: ISavedBoardsHtmlGenerator = {
-        savedBoardsElement
+        getSavedBoardsElement: getSavedBoardsElement
     }
 
     return rc

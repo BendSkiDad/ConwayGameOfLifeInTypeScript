@@ -36,5 +36,5 @@ const savedBoardsJson = await response.json()
 const savedBoards: ISavedBoard[] = savedBoardsJson.boards
 
 const savedBoardsHtmlGenerator: ISavedBoardsHtmlGenerator = SavedBoardsHtmlGenerator()
-const savedBoardsElement: HTMLElement = savedBoardsHtmlGenerator.savedBoardsElement(savedBoards)
+const savedBoardsElement: HTMLParagraphElement = savedBoardsHtmlGenerator.getSavedBoardsElement(savedBoards)
 rootElement.appendChild(savedBoardsElement)
