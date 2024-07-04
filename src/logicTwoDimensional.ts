@@ -71,10 +71,14 @@ let bornAndSurviveRule: BornAndSurviveRule = {
     arrSurviveNeighborCounts: [2,3]
 }
 
-export function liveCellsAsJSON () : string {
-    return JSON.stringify({
-        liveCells: liveCells })
+export function getLiveCells () : readonly Cell[] {
+    return liveCells
 }
+
+// export function liveCellsAsJSON () : string {
+//     return JSON.stringify({
+//         liveCells: liveCells })
+// }
 
 export function addSimpleGliderGoingUpAndLeft (upperLeftCellOfGlider: ICell) : void {
     liveCells.push(

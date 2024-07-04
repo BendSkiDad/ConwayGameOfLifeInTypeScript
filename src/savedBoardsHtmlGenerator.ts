@@ -21,7 +21,7 @@ interface ICell {
     columnIndex: number
 }
 
-interface ISavedBoard {
+export interface ISavedBoard {
     name: string,
     liveCells: ICell[]
 }
@@ -46,14 +46,10 @@ export interface ISavedBoardsHtmlGenerator {
 }
 
 export function SavedBoardsHtmlGenerator() : ISavedBoardsHtmlGenerator {
-    async function savedBoardsElement (): Promise<HTMLParagraphElement> {
+    function savedBoardsElement (boards: ISavedBoard[]): HTMLParagraphElement {
         const rc: HTMLParagraphElement = document.createElement('p')
         const headerElement: HTMLElement = deriveHeaderElement()
         rc.appendChild(headerElement)
-
-        const response: Response = await fetch(`/api/boards`)
-        const savedBoardsJson = await response.json()
-        const boards: ISavedBoard[] = savedBoardsJson.boards
 
         const boardsListElement: HTMLUListElement = deriveBoardsListElement(boards)
         rc.appendChild(boardsListElement)

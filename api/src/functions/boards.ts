@@ -27,9 +27,31 @@ let boards = [
     },
 ]
 
+interface ICell {
+    rowIndex: number,
+    columnIndex: number
+}
+
+interface ISavedBoard {
+    name: string,
+    liveCells: ICell[]
+}
+
+function instanceOfISavedBoard(object: any): object is ISavedBoard {
+    if(object.name !== undefined && object.liveCells !== undefined) {
+        return true
+    }
+    return false
+}
 
 export async function getBoards(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
     context.log(`Http function processed request for url "${request.url}"`);
+    if(request.method === "POST") {
+        const possibleSavedBoardObject = await request.json()
+        if(instanceOfISavedBoard(possibleSavedBoardObject)) {
+            boards.push(possibleSavedBoardObject)
+        }
+    }
     return {
         jsonBody: {
             boards: boards

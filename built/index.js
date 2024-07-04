@@ -20,6 +20,9 @@ const controlElements = controlHtmlGenerator.controlElements(0); // iterationCou
 controlElements.forEach(element => {
     rootElement.appendChild(element);
 });
+const response = await fetch(`/api/boards`);
+const savedBoardsJson = await response.json();
+const savedBoards = savedBoardsJson.boards;
 const savedBoardsHtmlGenerator = SavedBoardsHtmlGenerator();
-const savedBoardsElement = await savedBoardsHtmlGenerator.savedBoardsElement();
+const savedBoardsElement = savedBoardsHtmlGenerator.savedBoardsElement(savedBoards);
 rootElement.appendChild(savedBoardsElement);

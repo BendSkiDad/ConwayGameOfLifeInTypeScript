@@ -1,4 +1,5 @@
 import * as logic from "./logicTwoDimensional.js";
+import { SavedBoardsHtmlGenerator } from "./savedBoardsHtmlGenerator.js";
 export function ControlHtmlGenerator(boardHtmlGenerator) {
     const runButton = deriveButton('Run', handleRunClick);
     const iterationCountElement = document.createElement('span');
@@ -114,12 +115,28 @@ export function ControlHtmlGenerator(boardHtmlGenerator) {
             start();
         }
     }
-    function handleSaveClick() {
+    async function handleSaveClick() {
         const saveNameElement = document.getElementById('idSaveName');
         const saveName = saveNameElement.value;
         if (saveName) {
-            const liveCellsAsJSON = logic.liveCellsAsJSON();
-            alert('the JSON below should be saved with this name: ' + saveName + ' ' + liveCellsAsJSON);
+            const liveCells = logic.getLiveCells();
+            const jsonString = JSON.stringify({
+                name: saveName,
+                liveCells: liveCells
+            });
+            //todo: add error checking to this fetch
+            const response = await fetch(`/api/boards`, {
+                method: "POST",
+                body: jsonString,
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8"
+                }
+            });
+            const savedBoardsJson = await response.json();
+            const savedBoards = savedBoardsJson.boards;
+            const savedBoardsHtmlGenerator = SavedBoardsHtmlGenerator();
+            savedBoardsHtmlGenerator.savedBoardsElement(savedBoards);
+            //todo: update the list of saved boards here
         }
         else {
             alert('please enter a save name');

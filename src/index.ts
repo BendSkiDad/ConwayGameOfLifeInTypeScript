@@ -1,7 +1,7 @@
 import * as logic from "./logicTwoDimensional.js"
 import { BoardHtmlGenerator, IBoardHtmlGenerator } from "./boardHtmlGenerator.js"
 import { ControlHtmlGenerator, IControlHtmlGenerator } from "./ControlHtmlGenerator.js"
-import { SavedBoardsHtmlGenerator, ISavedBoardsHtmlGenerator } from "./savedBoardsHtmlGenerator.js"
+import { ISavedBoard, SavedBoardsHtmlGenerator, ISavedBoardsHtmlGenerator } from "./savedBoardsHtmlGenerator.js"
 
 // create and add a container element for the board
 const boardContainerElement: HTMLParagraphElement = document.createElement('p')
@@ -30,6 +30,11 @@ const controlElements: HTMLElement[] =
 controlElements.forEach(element => {
     rootElement.appendChild(element)
 })
+
+const response: Response = await fetch(`/api/boards`)
+const savedBoardsJson = await response.json()
+const savedBoards: ISavedBoard[] = savedBoardsJson.boards
+
 const savedBoardsHtmlGenerator: ISavedBoardsHtmlGenerator = SavedBoardsHtmlGenerator()
-const savedBoardsElement: HTMLElement = await savedBoardsHtmlGenerator.savedBoardsElement()
+const savedBoardsElement: HTMLElement = savedBoardsHtmlGenerator.savedBoardsElement(savedBoards)
 rootElement.appendChild(savedBoardsElement)

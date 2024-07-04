@@ -29,13 +29,10 @@ function deriveBoardsListElement(boards) {
     return rc;
 }
 export function SavedBoardsHtmlGenerator() {
-    async function savedBoardsElement() {
+    function savedBoardsElement(boards) {
         const rc = document.createElement('p');
         const headerElement = deriveHeaderElement();
         rc.appendChild(headerElement);
-        const response = await fetch(`/api/boards`);
-        const savedBoardsJson = await response.json();
-        const boards = savedBoardsJson.boards;
         const boardsListElement = deriveBoardsListElement(boards);
         rc.appendChild(boardsListElement);
         return rc;
