@@ -6,18 +6,18 @@ export interface IControlHtmlGenerator {
     controlElements: Function
 }
 
-export function ControlHtmlGenerator (boardHtmlGenerator: IBoardHtmlGenerator) : IControlHtmlGenerator {
-    const runButton: HTMLInputElement = deriveButton('Run', handleRunClick)
+export function ControlHtmlGenerator (boardHtmlGenerator: IBoardHtmlGenerator, startingIterationCount: number) : IControlHtmlGenerator {
+    const runButtonElement: HTMLInputElement = deriveButton('Run', handleRunClick)
     const iterationCountElement: HTMLSpanElement = document.createElement('span')
     let interval: number = 0
     let isRunning: boolean = false
 
     function renderRunStopButtonAsRun (): void {
-        runButton.value = 'Run'
+        runButtonElement.value = 'Run'
     }
   
     function renderRunStopButtonAsStop (): void {
-        runButton.value = 'Stop'
+        runButtonElement.value = 'Stop'
     }
   
     function updateIterationCount (): void {
@@ -70,7 +70,7 @@ export function ControlHtmlGenerator (boardHtmlGenerator: IBoardHtmlGenerator) :
         buttonContainerElement.appendChild(addRowButton)
         buttonContainerElement.appendChild(addColumnButton)
         buttonContainerElement.appendChild(resetButton)
-        buttonContainerElement.appendChild(runButton)
+        buttonContainerElement.appendChild(runButtonElement)
 
         const textBoxElement : HTMLInputElement =
             document.createElement('input')
@@ -84,11 +84,11 @@ export function ControlHtmlGenerator (boardHtmlGenerator: IBoardHtmlGenerator) :
         return buttonContainerElement
     }
 
-    function controlElements (iterationCount: number): HTMLElement[] {
+    function controlElements (): HTMLElement[] {
         const ruleDescriptionElement: HTMLElement =
             deriveRuleDescriptionElement()
         const iterationCountParagraphElement: HTMLElement =
-            deriveIterationCountParagraph(iterationCount)
+            deriveIterationCountParagraph(startingIterationCount)
         const buttonsContainerElement: HTMLElement =
             deriveButtonsContainerElement()
         return [

@@ -1,15 +1,15 @@
 import * as logic from "./logicTwoDimensional.js";
 import { SavedBoardsHtmlGenerator } from "./savedBoardsHtmlGenerator.js";
-export function ControlHtmlGenerator(boardHtmlGenerator) {
-    const runButton = deriveButton('Run', handleRunClick);
+export function ControlHtmlGenerator(boardHtmlGenerator, startingIterationCount) {
+    const runButtonElement = deriveButton('Run', handleRunClick);
     const iterationCountElement = document.createElement('span');
     let interval = 0;
     let isRunning = false;
     function renderRunStopButtonAsRun() {
-        runButton.value = 'Run';
+        runButtonElement.value = 'Run';
     }
     function renderRunStopButtonAsStop() {
-        runButton.value = 'Stop';
+        runButtonElement.value = 'Stop';
     }
     function updateIterationCount() {
         iterationCountElement.textContent = logic.getIterationCount().toString();
@@ -51,7 +51,7 @@ export function ControlHtmlGenerator(boardHtmlGenerator) {
         buttonContainerElement.appendChild(addRowButton);
         buttonContainerElement.appendChild(addColumnButton);
         buttonContainerElement.appendChild(resetButton);
-        buttonContainerElement.appendChild(runButton);
+        buttonContainerElement.appendChild(runButtonElement);
         const textBoxElement = document.createElement('input');
         textBoxElement.setAttribute('type', 'text');
         textBoxElement.setAttribute('id', 'idSaveName');
@@ -60,9 +60,9 @@ export function ControlHtmlGenerator(boardHtmlGenerator) {
         buttonContainerElement.appendChild(saveButton);
         return buttonContainerElement;
     }
-    function controlElements(iterationCount) {
+    function controlElements() {
         const ruleDescriptionElement = deriveRuleDescriptionElement();
-        const iterationCountParagraphElement = deriveIterationCountParagraph(iterationCount);
+        const iterationCountParagraphElement = deriveIterationCountParagraph(startingIterationCount);
         const buttonsContainerElement = deriveButtonsContainerElement();
         return [
             iterationCountParagraphElement,
