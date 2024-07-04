@@ -3,6 +3,14 @@ import { SavedBoardsHtmlGenerator } from "./savedBoardsHtmlGenerator.js";
 export function ControlHtmlGenerator(boardHtmlGenerator, startingIterationCount) {
     const runButtonElement = deriveButton('Run', handleRunClick);
     const iterationCountElement = document.createElement('span');
+    const ruleDescriptionElement = deriveRuleDescriptionElement();
+    const iterationCountParagraphElement = deriveIterationCountParagraph(startingIterationCount);
+    const advanceOneStepButton = deriveButton('Advance a step', handleAdvanceAStepClick);
+    const addRowButton = deriveButton('Add Row', handleAddRowClick);
+    const addColumnButton = deriveButton('Add Column', handleAddColumnClick);
+    const resetButton = deriveButton('Clear', handleClearClick);
+    const saveContainerElement = deriveSaveContainerElement();
+    const buttonsContainerElement = deriveButtonsContainerElement();
     let interval = 0;
     let isRunning = false;
     function renderRunStopButtonAsRun() {
@@ -42,28 +50,26 @@ export function ControlHtmlGenerator(boardHtmlGenerator, startingIterationCount)
         return button;
     }
     function deriveButtonsContainerElement() {
-        const advanceOneStepButton = deriveButton('Advance a step', handleAdvanceAStepClick);
-        const addRowButton = deriveButton('Add Row', handleAddRowClick);
-        const addColumnButton = deriveButton('Add Column', handleAddColumnClick);
-        const resetButton = deriveButton('Clear', handleClearClick);
         const buttonContainerElement = document.createElement('div');
         buttonContainerElement.appendChild(advanceOneStepButton);
         buttonContainerElement.appendChild(addRowButton);
         buttonContainerElement.appendChild(addColumnButton);
         buttonContainerElement.appendChild(resetButton);
         buttonContainerElement.appendChild(runButtonElement);
-        const textBoxElement = document.createElement('input');
-        textBoxElement.setAttribute('type', 'text');
-        textBoxElement.setAttribute('id', 'idSaveName');
-        const saveButton = deriveButton('Save', handleSaveClick);
-        buttonContainerElement.appendChild(textBoxElement);
-        buttonContainerElement.appendChild(saveButton);
+        buttonContainerElement.appendChild(saveContainerElement);
         return buttonContainerElement;
     }
+    function deriveSaveContainerElement() {
+        const textInputElement = document.createElement('input');
+        textInputElement.setAttribute('type', 'text');
+        textInputElement.setAttribute('id', 'idSaveName');
+        const saveButtonElement = deriveButton('Save', handleSaveClick);
+        const pElement = document.createElement('p');
+        pElement.appendChild(textInputElement);
+        pElement.appendChild(saveButtonElement);
+        return pElement;
+    }
     function controlElements() {
-        const ruleDescriptionElement = deriveRuleDescriptionElement();
-        const iterationCountParagraphElement = deriveIterationCountParagraph(startingIterationCount);
-        const buttonsContainerElement = deriveButtonsContainerElement();
         return [
             iterationCountParagraphElement,
             buttonsContainerElement,

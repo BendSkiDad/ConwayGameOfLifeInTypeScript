@@ -14,9 +14,10 @@ const startingUpperLeftCell = new logic.Cell(1, 1);
 const startingLowerRightCell = new logic.Cell(10, 20);
 const startingBoardExtent = new logic.CellExtent(startingUpperLeftCell, startingLowerRightCell);
 const boardHtmlGenerator = BoardHtmlGenerator(startingBoardExtent, boardContainerElement);
-const controlHtmlGenerator = ControlHtmlGenerator(boardHtmlGenerator, 0);
+const startingIterationCount = 0;
+const controlHtmlGenerator = ControlHtmlGenerator(boardHtmlGenerator, startingIterationCount);
 boardHtmlGenerator.updateBoardElement();
-const controlElements = controlHtmlGenerator.controlElements(0); // iterationCount
+const controlElements = controlHtmlGenerator.controlElements();
 controlElements.forEach(element => {
     rootElement.appendChild(element);
 });

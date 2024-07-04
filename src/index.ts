@@ -22,11 +22,12 @@ const startingBoardExtent: logic.CellExtent =
   )
 const boardHtmlGenerator: IBoardHtmlGenerator =
     BoardHtmlGenerator(startingBoardExtent, boardContainerElement)
+const startingIterationCount: number = 0
 const controlHtmlGenerator : IControlHtmlGenerator =
-    ControlHtmlGenerator(boardHtmlGenerator, 0)
+    ControlHtmlGenerator(boardHtmlGenerator, startingIterationCount)
 boardHtmlGenerator.updateBoardElement()
 const controlElements: HTMLElement[] =
-    controlHtmlGenerator.controlElements(0) // iterationCount
+    controlHtmlGenerator.controlElements()
 controlElements.forEach(element => {
     rootElement.appendChild(element)
 })

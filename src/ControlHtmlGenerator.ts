@@ -7,8 +7,24 @@ export interface IControlHtmlGenerator {
 }
 
 export function ControlHtmlGenerator (boardHtmlGenerator: IBoardHtmlGenerator, startingIterationCount: number) : IControlHtmlGenerator {
-    const runButtonElement: HTMLInputElement = deriveButton('Run', handleRunClick)
-    const iterationCountElement: HTMLSpanElement = document.createElement('span')
+    const runButtonElement: HTMLInputElement =
+        deriveButton('Run', handleRunClick)
+    const iterationCountElement: HTMLSpanElement =
+        document.createElement('span')
+    const ruleDescriptionElement: HTMLElement = deriveRuleDescriptionElement()
+    const iterationCountParagraphElement: HTMLElement =
+        deriveIterationCountParagraph(startingIterationCount)
+    const advanceOneStepButton: HTMLInputElement =
+        deriveButton('Advance a step', handleAdvanceAStepClick)
+    const addRowButton: HTMLInputElement =
+        deriveButton('Add Row', handleAddRowClick)
+    const addColumnButton: HTMLInputElement =
+        deriveButton('Add Column', handleAddColumnClick)
+    const resetButton: HTMLInputElement =
+        deriveButton('Clear', handleClearClick)
+    const saveContainerElement = deriveSaveContainerElement()
+    const buttonsContainerElement: HTMLElement =
+        deriveButtonsContainerElement()
     let interval: number = 0
     let isRunning: boolean = false
 
@@ -55,15 +71,6 @@ export function ControlHtmlGenerator (boardHtmlGenerator: IBoardHtmlGenerator, s
     }
 
     function deriveButtonsContainerElement (): HTMLElement {
-        const advanceOneStepButton: HTMLInputElement =
-            deriveButton('Advance a step', handleAdvanceAStepClick)
-        const addRowButton: HTMLInputElement =
-            deriveButton('Add Row', handleAddRowClick)
-        const addColumnButton: HTMLInputElement =
-            deriveButton('Add Column', handleAddColumnClick)
-        const resetButton: HTMLInputElement =
-            deriveButton('Clear', handleClearClick)
-
         const buttonContainerElement: HTMLDivElement =
             document.createElement('div')
         buttonContainerElement.appendChild(advanceOneStepButton)
@@ -71,26 +78,24 @@ export function ControlHtmlGenerator (boardHtmlGenerator: IBoardHtmlGenerator, s
         buttonContainerElement.appendChild(addColumnButton)
         buttonContainerElement.appendChild(resetButton)
         buttonContainerElement.appendChild(runButtonElement)
-
-        const textBoxElement : HTMLInputElement =
-            document.createElement('input')
-        textBoxElement.setAttribute('type', 'text')
-        textBoxElement.setAttribute('id', 'idSaveName')
-        const saveButton: HTMLInputElement =
-            deriveButton('Save', handleSaveClick)
-        buttonContainerElement.appendChild(textBoxElement)
-        buttonContainerElement.appendChild(saveButton)
-
+        buttonContainerElement.appendChild(saveContainerElement)
         return buttonContainerElement
     }
 
+    function deriveSaveContainerElement(): HTMLParagraphElement {
+        const textInputElement : HTMLInputElement =
+            document.createElement('input')
+        textInputElement.setAttribute('type', 'text')
+        textInputElement.setAttribute('id', 'idSaveName')
+        const saveButtonElement: HTMLInputElement =
+            deriveButton('Save', handleSaveClick)
+        const pElement: HTMLParagraphElement = document.createElement('p')
+        pElement.appendChild(textInputElement)
+        pElement.appendChild(saveButtonElement)
+        return pElement
+    }
+
     function controlElements (): HTMLElement[] {
-        const ruleDescriptionElement: HTMLElement =
-            deriveRuleDescriptionElement()
-        const iterationCountParagraphElement: HTMLElement =
-            deriveIterationCountParagraph(startingIterationCount)
-        const buttonsContainerElement: HTMLElement =
-            deriveButtonsContainerElement()
         return [
             iterationCountParagraphElement,
             buttonsContainerElement,
