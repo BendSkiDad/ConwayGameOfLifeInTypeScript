@@ -149,7 +149,15 @@ export function ControlHtmlGenerator(boardHtmlGenerator, startingIterationCount)
         }
     }
     const rc = {
-        controlElements
+        controlElements,
+        iterationCountContainerElement,
+        advanceOneStepButtonElement,
+        addRowButtonElement,
+        addColumnButtonElement,
+        resetButtonElement,
+        runButtonElement,
+        saveContainerElement,
+        ruleDescriptionElement
     };
     return rc;
 }

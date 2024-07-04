@@ -3,7 +3,15 @@ import { IBoardHtmlGenerator } from "./boardHtmlGenerator.js"
 import { ISavedBoard, SavedBoardsHtmlGenerator, ISavedBoardsHtmlGenerator } from "./savedBoardsHtmlGenerator.js"
 
 export interface IControlHtmlGenerator {
-    controlElements: Function
+    controlElements: Function,
+    iterationCountContainerElement: HTMLParagraphElement,
+    advanceOneStepButtonElement: HTMLInputElement,
+    addRowButtonElement: HTMLInputElement,
+    addColumnButtonElement: HTMLInputElement,
+    resetButtonElement: HTMLInputElement,
+    runButtonElement: HTMLInputElement,
+    saveContainerElement: HTMLParagraphElement,
+    ruleDescriptionElement: HTMLParagraphElement
 }
 
 export function ControlHtmlGenerator (boardHtmlGenerator: IBoardHtmlGenerator, startingIterationCount: number) : IControlHtmlGenerator {
@@ -11,7 +19,7 @@ export function ControlHtmlGenerator (boardHtmlGenerator: IBoardHtmlGenerator, s
         deriveButton('Run', handleRunClick)
     const iterationCountElement: HTMLSpanElement =
         document.createElement('span')
-    const ruleDescriptionElement: HTMLElement = deriveRuleDescriptionElement()
+    const ruleDescriptionElement: HTMLParagraphElement = deriveRuleDescriptionElement()
     const iterationCountContainerElement: HTMLParagraphElement =
         deriveIterationCountParagraph(startingIterationCount)
     const advanceOneStepButtonElement: HTMLInputElement =
@@ -22,7 +30,8 @@ export function ControlHtmlGenerator (boardHtmlGenerator: IBoardHtmlGenerator, s
         deriveButton('Add Column', handleAddColumnClick)
     const resetButtonElement: HTMLInputElement =
         deriveButton('Clear', handleClearClick)
-    const saveContainerElement = deriveSaveContainerElement()
+    const saveContainerElement: HTMLParagraphElement =
+        deriveSaveContainerElement()
     const buttonsContainerElement: HTMLElement =
         deriveButtonsContainerElement()
     let interval: number = 0
@@ -188,8 +197,16 @@ export function ControlHtmlGenerator (boardHtmlGenerator: IBoardHtmlGenerator, s
     }
 
     const rc: IControlHtmlGenerator = {
-        controlElements
-    }
+        controlElements,
+        iterationCountContainerElement,
+        advanceOneStepButtonElement,
+        addRowButtonElement,
+        addColumnButtonElement,
+        resetButtonElement,
+        runButtonElement,
+        saveContainerElement,
+        ruleDescriptionElement
+       }
 
     return rc
 }
