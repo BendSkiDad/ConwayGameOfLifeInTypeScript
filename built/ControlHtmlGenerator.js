@@ -5,10 +5,10 @@ export function ControlHtmlGenerator(boardHtmlGenerator, startingIterationCount)
     const iterationCountElement = document.createElement('span');
     const ruleDescriptionElement = deriveRuleDescriptionElement();
     const iterationCountParagraphElement = deriveIterationCountParagraph(startingIterationCount);
-    const advanceOneStepButton = deriveButton('Advance a step', handleAdvanceAStepClick);
-    const addRowButton = deriveButton('Add Row', handleAddRowClick);
-    const addColumnButton = deriveButton('Add Column', handleAddColumnClick);
-    const resetButton = deriveButton('Clear', handleClearClick);
+    const advanceOneStepButtonElement = deriveButton('Advance a step', handleAdvanceAStepClick);
+    const addRowButtonElement = deriveButton('Add Row', handleAddRowClick);
+    const addColumnButtonElement = deriveButton('Add Column', handleAddColumnClick);
+    const resetButtonElement = deriveButton('Clear', handleClearClick);
     const saveContainerElement = deriveSaveContainerElement();
     const buttonsContainerElement = deriveButtonsContainerElement();
     let interval = 0;
@@ -51,10 +51,10 @@ export function ControlHtmlGenerator(boardHtmlGenerator, startingIterationCount)
     }
     function deriveButtonsContainerElement() {
         const buttonContainerElement = document.createElement('div');
-        buttonContainerElement.appendChild(advanceOneStepButton);
-        buttonContainerElement.appendChild(addRowButton);
-        buttonContainerElement.appendChild(addColumnButton);
-        buttonContainerElement.appendChild(resetButton);
+        buttonContainerElement.appendChild(advanceOneStepButtonElement);
+        buttonContainerElement.appendChild(addRowButtonElement);
+        buttonContainerElement.appendChild(addColumnButtonElement);
+        buttonContainerElement.appendChild(resetButtonElement);
         buttonContainerElement.appendChild(runButtonElement);
         buttonContainerElement.appendChild(saveContainerElement);
         return buttonContainerElement;
