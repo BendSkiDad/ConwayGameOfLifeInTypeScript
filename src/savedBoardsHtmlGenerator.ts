@@ -22,6 +22,7 @@ interface ICell {
 }
 
 export interface ISavedBoard {
+    id: number,
     name: string,
     liveCells: ICell[]
 }
@@ -29,7 +30,7 @@ export interface ISavedBoard {
 function deriveBoardsListElement(boards: ISavedBoard[]): HTMLUListElement {
     const spanElements: HTMLSpanElement[] = boards.map(function(board: ISavedBoard): HTMLSpanElement {
         const rc: HTMLSpanElement = document.createElement('span')
-        rc.append(board.name)
+        rc.append(board.name + " with id of " + board.id)
 
         const liveCellListItemElements: string[] = board.liveCells.map(function(liveCell): string {
             return "row: " + liveCell.rowIndex + " column: " + liveCell.columnIndex

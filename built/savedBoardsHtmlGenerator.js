@@ -17,7 +17,7 @@ function deriveHeaderElement() {
 function deriveBoardsListElement(boards) {
     const spanElements = boards.map(function (board) {
         const rc = document.createElement('span');
-        rc.append(board.name);
+        rc.append(board.name + " with id of " + board.id);
         const liveCellListItemElements = board.liveCells.map(function (liveCell) {
             return "row: " + liveCell.rowIndex + " column: " + liveCell.columnIndex;
         });
