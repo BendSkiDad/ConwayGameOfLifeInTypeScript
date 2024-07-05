@@ -20,13 +20,15 @@ const rootElement: HTMLElement = document.getElementById('root') as HTMLElement
 // create container elements
 const boardContainerElement: HTMLParagraphElement = document.createElement('p')
 const buttonContainerElement: HTMLParagraphElement = document.createElement('p')
+const savedBoardsContainerElement: HTMLParagraphElement = document.createElement('p')
 
 const boardHtmlGenerator: IBoardHtmlGenerator =
     BoardHtmlGenerator(startingBoardExtent, boardContainerElement)
 boardHtmlGenerator.updateBoardElement()
+const savedBoardsHtmlGenerator: ISavedBoardsHtmlGenerator = SavedBoardsHtmlGenerator(savedBoardsContainerElement)
 const startingIterationCount: number = 0
 const controlHtmlGenerator : IControlHtmlGenerator =
-    ControlHtmlGenerator(boardHtmlGenerator, startingIterationCount)
+    ControlHtmlGenerator(boardHtmlGenerator, startingIterationCount, savedBoardsHtmlGenerator)
 
 buttonContainerElement.appendChild(controlHtmlGenerator.advanceOneStepButtonElement)
 buttonContainerElement.appendChild(controlHtmlGenerator.addRowButtonElement)
@@ -43,6 +45,5 @@ const response: Response = await fetch(`/api/boards`)
 const savedBoardsJson = await response.json()
 const savedBoards: ISavedBoard[] = savedBoardsJson.boards
 
-const savedBoardsHtmlGenerator: ISavedBoardsHtmlGenerator = SavedBoardsHtmlGenerator()
-const savedBoardsElement: HTMLParagraphElement = savedBoardsHtmlGenerator.getSavedBoardsElement(savedBoards)
-rootElement.appendChild(savedBoardsElement)
+savedBoardsHtmlGenerator.updateSavedBoardsList(savedBoards)
+rootElement.appendChild(savedBoardsContainerElement)

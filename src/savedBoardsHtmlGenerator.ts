@@ -30,7 +30,7 @@ function deriveBoardsListElement(boards: ISavedBoard[]): HTMLUListElement {
     const spanElements: HTMLSpanElement[] = boards.map(function(board: ISavedBoard): HTMLSpanElement {
         const rc: HTMLSpanElement = document.createElement('span')
         rc.append(board.name)
-        
+
         const liveCellListItemElements: string[] = board.liveCells.map(function(liveCell): string {
             return "row: " + liveCell.rowIndex + " column: " + liveCell.columnIndex
         })
@@ -43,22 +43,18 @@ function deriveBoardsListElement(boards: ISavedBoard[]): HTMLUListElement {
 }
 
 export interface ISavedBoardsHtmlGenerator {
-    getSavedBoardsElement: Function
+    updateSavedBoardsList: Function
 }
 
-export function SavedBoardsHtmlGenerator() : ISavedBoardsHtmlGenerator {
-    function getSavedBoardsElement (boards: ISavedBoard[]): HTMLParagraphElement {
-        const rc: HTMLParagraphElement = document.createElement('p')
+export function SavedBoardsHtmlGenerator(containerElement: HTMLElement) : ISavedBoardsHtmlGenerator {
+    function updatedSavedBoardsList (boards: ISavedBoard[]): void {
         const headerElement: HTMLElement = deriveHeaderElement()
-        rc.appendChild(headerElement)
-
         const boardsListElement: HTMLUListElement = deriveBoardsListElement(boards)
-        rc.appendChild(boardsListElement)
-        return rc
+        containerElement.replaceChildren(headerElement, boardsListElement)
     }
 
     const rc: ISavedBoardsHtmlGenerator = {
-        getSavedBoardsElement: getSavedBoardsElement
+        updateSavedBoardsList: updatedSavedBoardsList
     }
 
     return rc

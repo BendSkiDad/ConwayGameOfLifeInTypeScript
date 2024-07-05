@@ -1,6 +1,5 @@
 import * as logic from "./logicTwoDimensional.js";
-import { SavedBoardsHtmlGenerator } from "./savedBoardsHtmlGenerator.js";
-export function ControlHtmlGenerator(boardHtmlGenerator, startingIterationCount) {
+export function ControlHtmlGenerator(boardHtmlGenerator, startingIterationCount, savedBoardsHtmlGenerator) {
     const runButtonElement = deriveButton('Run', handleRunClick);
     const iterationCountElement = document.createElement('span');
     const ruleDescriptionElement = deriveRuleDescriptionElement();
@@ -122,9 +121,7 @@ export function ControlHtmlGenerator(boardHtmlGenerator, startingIterationCount)
             });
             const savedBoardsJson = await response.json();
             const savedBoards = savedBoardsJson.boards;
-            const savedBoardsHtmlGenerator = SavedBoardsHtmlGenerator();
-            savedBoardsHtmlGenerator.getSavedBoardsElement(savedBoards);
-            //todo: update the list of saved boards here
+            savedBoardsHtmlGenerator.updateSavedBoardsList(savedBoards);
         }
         else {
             alert('please enter a save name');

@@ -1,6 +1,6 @@
 import * as logic from "./logicTwoDimensional.js"
 import { IBoardHtmlGenerator } from "./boardHtmlGenerator.js"
-import { ISavedBoard, SavedBoardsHtmlGenerator, ISavedBoardsHtmlGenerator } from "./savedBoardsHtmlGenerator.js"
+import { ISavedBoard, ISavedBoardsHtmlGenerator } from "./savedBoardsHtmlGenerator.js"
 
 export interface IControlHtmlGenerator {
     iterationCountContainerElement: HTMLParagraphElement,
@@ -13,7 +13,7 @@ export interface IControlHtmlGenerator {
     ruleDescriptionElement: HTMLParagraphElement
 }
 
-export function ControlHtmlGenerator (boardHtmlGenerator: IBoardHtmlGenerator, startingIterationCount: number) : IControlHtmlGenerator {
+export function ControlHtmlGenerator (boardHtmlGenerator: IBoardHtmlGenerator, startingIterationCount: number, savedBoardsHtmlGenerator: ISavedBoardsHtmlGenerator) : IControlHtmlGenerator {
     const runButtonElement: HTMLInputElement =
         deriveButton('Run', handleRunClick)
     const iterationCountElement: HTMLSpanElement =
@@ -165,11 +165,8 @@ export function ControlHtmlGenerator (boardHtmlGenerator: IBoardHtmlGenerator, s
             const savedBoardsJson = await response.json()
             const savedBoards: ISavedBoard[] = savedBoardsJson.boards
             
-            const savedBoardsHtmlGenerator: ISavedBoardsHtmlGenerator = SavedBoardsHtmlGenerator()
-            savedBoardsHtmlGenerator.getSavedBoardsElement(savedBoards)
-
-            //todo: update the list of saved boards here
-        } else {
+            savedBoardsHtmlGenerator.updateSavedBoardsList(savedBoards)
+       } else {
             alert('please enter a save name')
         }
     }

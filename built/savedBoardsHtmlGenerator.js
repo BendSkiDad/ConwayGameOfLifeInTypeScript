@@ -28,17 +28,14 @@ function deriveBoardsListElement(boards) {
     const rc = deriveUnorderedListElement(spanElements);
     return rc;
 }
-export function SavedBoardsHtmlGenerator() {
-    function getSavedBoardsElement(boards) {
-        const rc = document.createElement('p');
+export function SavedBoardsHtmlGenerator(containerElement) {
+    function updatedSavedBoardsList(boards) {
         const headerElement = deriveHeaderElement();
-        rc.appendChild(headerElement);
         const boardsListElement = deriveBoardsListElement(boards);
-        rc.appendChild(boardsListElement);
-        return rc;
+        containerElement.replaceChildren(headerElement, boardsListElement);
     }
     const rc = {
-        getSavedBoardsElement: getSavedBoardsElement
+        updateSavedBoardsList: updatedSavedBoardsList
     };
     return rc;
 }
