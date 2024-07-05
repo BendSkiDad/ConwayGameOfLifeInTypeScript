@@ -1,3 +1,5 @@
+import * as HtmlHelpers from "./HtmlHelpers"
+
 function deriveUnorderedListElement(listItemContents: HTMLElement[] | string[]): HTMLUListElement {
     const listItems: HTMLLIElement[] = listItemContents.map(function(listItemContent: HTMLElement | string) {
         const rc: HTMLLIElement = document.createElement('li')
@@ -27,35 +29,50 @@ export interface ISavedBoard {
     liveCells: ICell[]
 }
 
-function deriveBoardsListElement(boards: ISavedBoard[]): HTMLUListElement {
-    const spanElements: HTMLSpanElement[] = boards.map(function(board: ISavedBoard): HTMLSpanElement {
-        const rc: HTMLSpanElement = document.createElement('span')
-        rc.append(board.name + " with id of " + board.id)
-
-        const liveCellListItemElements: string[] = board.liveCells.map(function(liveCell): string {
-            return "row: " + liveCell.rowIndex + " column: " + liveCell.columnIndex
-        })
-        const liveCellsListElement: HTMLUListElement = deriveUnorderedListElement(liveCellListItemElements)
-        rc.appendChild(liveCellsListElement)
-        return rc
-    })
-    const rc: HTMLUListElement = deriveUnorderedListElement(spanElements)
-    return rc
-}
-
 export interface ISavedBoardsHtmlGenerator {
     updateSavedBoardsList: Function
 }
 
 export function SavedBoardsHtmlGenerator(containerElement: HTMLElement) : ISavedBoardsHtmlGenerator {
-    function updatedSavedBoardsList (boards: ISavedBoard[]): void {
+    async function handleDeleteClick (): Promise<void> {
+        //todo: add error checking to this fetch
+        const response: Response = await fetch(
+            `/api/boards/?id=` + `3`,
+            {
+                method: "DELETE"
+            })
+        const savedBoardsJson = await response.json()
+        const savedBoards: ISavedBoard[] = savedBoardsJson.boards
+        updateSavedBoardsList(savedBoards)
+    }
+
+    function deriveBoardsListElement(boards: ISavedBoard[]): HTMLUListElement {
+        const spanElements: HTMLSpanElement[] = boards.map(function(board: ISavedBoard): HTMLSpanElement {
+            const rc: HTMLSpanElement = document.createElement('span')
+            const deleteButtonElement = HtmlHelpers.deriveButton("Delete", handleDeleteClick)
+    
+            rc.append(board.name)
+            rc.appendChild(deleteButtonElement)
+    
+            const liveCellListItemElements: string[] = board.liveCells.map(function(liveCell): string {
+                return "row: " + liveCell.rowIndex + " column: " + liveCell.columnIndex
+            })
+            const liveCellsListElement: HTMLUListElement = deriveUnorderedListElement(liveCellListItemElements)
+            rc.appendChild(liveCellsListElement)
+            return rc
+        })
+        const rc: HTMLUListElement = deriveUnorderedListElement(spanElements)
+        return rc
+    }
+    
+    function updateSavedBoardsList (boards: ISavedBoard[]): void {
         const headerElement: HTMLElement = deriveHeaderElement()
         const boardsListElement: HTMLUListElement = deriveBoardsListElement(boards)
         containerElement.replaceChildren(headerElement, boardsListElement)
     }
 
     const rc: ISavedBoardsHtmlGenerator = {
-        updateSavedBoardsList: updatedSavedBoardsList
+        updateSavedBoardsList: updateSavedBoardsList
     }
 
     return rc

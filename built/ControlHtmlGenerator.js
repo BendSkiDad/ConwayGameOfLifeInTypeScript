@@ -1,13 +1,14 @@
 import * as logic from "./logicTwoDimensional.js";
+import * as HtmlHelpers from "./HtmlHelpers";
 export function ControlHtmlGenerator(boardHtmlGenerator, startingIterationCount, savedBoardsHtmlGenerator) {
-    const runButtonElement = deriveButton('Run', handleRunClick);
+    const runButtonElement = HtmlHelpers.deriveButton('Run', handleRunClick);
     const iterationCountElement = document.createElement('span');
     const ruleDescriptionElement = deriveRuleDescriptionElement();
     const iterationCountContainerElement = deriveIterationCountParagraph(startingIterationCount);
-    const advanceOneStepButtonElement = deriveButton('Advance a step', handleAdvanceAStepClick);
-    const addRowButtonElement = deriveButton('Add Row', handleAddRowClick);
-    const addColumnButtonElement = deriveButton('Add Column', handleAddColumnClick);
-    const resetButtonElement = deriveButton('Clear', handleClearClick);
+    const advanceOneStepButtonElement = HtmlHelpers.deriveButton('Advance a step', handleAdvanceAStepClick);
+    const addRowButtonElement = HtmlHelpers.deriveButton('Add Row', handleAddRowClick);
+    const addColumnButtonElement = HtmlHelpers.deriveButton('Add Column', handleAddColumnClick);
+    const resetButtonElement = HtmlHelpers.deriveButton('Clear', handleClearClick);
     const saveContainerElement = deriveSaveContainerElement();
     let interval = 0;
     let isRunning = false;
@@ -37,21 +38,11 @@ export function ControlHtmlGenerator(boardHtmlGenerator, startingIterationCount,
         pElement.appendChild(iterationCountElement);
         return pElement;
     }
-    function deriveButton(value, fnClickHandler) {
-        const button = document.createElement('input');
-        button.setAttribute('type', 'button');
-        button.setAttribute('value', value);
-        if (fnClickHandler) {
-            button.addEventListener('click', fnClickHandler);
-        }
-        button.classList.add('button');
-        return button;
-    }
     function deriveSaveContainerElement() {
         const textInputElement = document.createElement('input');
         textInputElement.setAttribute('type', 'text');
         textInputElement.setAttribute('id', 'idSaveName');
-        const saveButtonElement = deriveButton('Save', handleSaveClick);
+        const saveButtonElement = HtmlHelpers.deriveButton('Save', handleSaveClick);
         const pElement = document.createElement('p');
         pElement.appendChild(textInputElement);
         pElement.appendChild(saveButtonElement);

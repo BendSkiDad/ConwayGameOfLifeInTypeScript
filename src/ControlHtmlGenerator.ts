@@ -1,6 +1,7 @@
 import * as logic from "./logicTwoDimensional.js"
 import { IBoardHtmlGenerator } from "./boardHtmlGenerator.js"
 import { ISavedBoard, ISavedBoardsHtmlGenerator } from "./savedBoardsHtmlGenerator.js"
+import * as HtmlHelpers from "./HtmlHelpers"
 
 export interface IControlHtmlGenerator {
     iterationCountContainerElement: HTMLParagraphElement,
@@ -15,20 +16,20 @@ export interface IControlHtmlGenerator {
 
 export function ControlHtmlGenerator (boardHtmlGenerator: IBoardHtmlGenerator, startingIterationCount: number, savedBoardsHtmlGenerator: ISavedBoardsHtmlGenerator) : IControlHtmlGenerator {
     const runButtonElement: HTMLInputElement =
-        deriveButton('Run', handleRunClick)
+        HtmlHelpers.deriveButton('Run', handleRunClick)
     const iterationCountElement: HTMLSpanElement =
         document.createElement('span')
     const ruleDescriptionElement: HTMLParagraphElement = deriveRuleDescriptionElement()
     const iterationCountContainerElement: HTMLParagraphElement =
         deriveIterationCountParagraph(startingIterationCount)
     const advanceOneStepButtonElement: HTMLInputElement =
-        deriveButton('Advance a step', handleAdvanceAStepClick)
+        HtmlHelpers.deriveButton('Advance a step', handleAdvanceAStepClick)
     const addRowButtonElement: HTMLInputElement =
-        deriveButton('Add Row', handleAddRowClick)
+        HtmlHelpers.deriveButton('Add Row', handleAddRowClick)
     const addColumnButtonElement: HTMLInputElement =
-        deriveButton('Add Column', handleAddColumnClick)
+        HtmlHelpers.deriveButton('Add Column', handleAddColumnClick)
     const resetButtonElement: HTMLInputElement =
-        deriveButton('Clear', handleClearClick)
+        HtmlHelpers.deriveButton('Clear', handleClearClick)
     const saveContainerElement: HTMLParagraphElement =
         deriveSaveContainerElement()
     let interval: number = 0
@@ -65,24 +66,13 @@ export function ControlHtmlGenerator (boardHtmlGenerator: IBoardHtmlGenerator, s
         return pElement
     }
   
-    function deriveButton (value: string, fnClickHandler?: EventListenerOrEventListenerObject): HTMLInputElement {
-        const button: HTMLInputElement = document.createElement('input')
-        button.setAttribute('type', 'button')
-        button.setAttribute('value', value)
-        if(fnClickHandler) {
-            button.addEventListener('click', fnClickHandler)
-        }
-        button.classList.add('button')
-        return button
-    }
-
     function deriveSaveContainerElement(): HTMLParagraphElement {
         const textInputElement : HTMLInputElement =
             document.createElement('input')
         textInputElement.setAttribute('type', 'text')
         textInputElement.setAttribute('id', 'idSaveName')
         const saveButtonElement: HTMLInputElement =
-            deriveButton('Save', handleSaveClick)
+            HtmlHelpers.deriveButton('Save', handleSaveClick)
         const pElement: HTMLParagraphElement = document.createElement('p')
         pElement.appendChild(textInputElement)
         pElement.appendChild(saveButtonElement)

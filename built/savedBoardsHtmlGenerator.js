@@ -1,3 +1,4 @@
+import * as HtmlHelpers from "./HtmlHelpers";
 function deriveUnorderedListElement(listItemContents) {
     const listItems = listItemContents.map(function (listItemContent) {
         const rc = document.createElement('li');
@@ -14,28 +15,39 @@ function deriveHeaderElement() {
     headerElement.appendChild(headerTextNode);
     return headerElement;
 }
-function deriveBoardsListElement(boards) {
-    const spanElements = boards.map(function (board) {
-        const rc = document.createElement('span');
-        rc.append(board.name + " with id of " + board.id);
-        const liveCellListItemElements = board.liveCells.map(function (liveCell) {
-            return "row: " + liveCell.rowIndex + " column: " + liveCell.columnIndex;
-        });
-        const liveCellsListElement = deriveUnorderedListElement(liveCellListItemElements);
-        rc.appendChild(liveCellsListElement);
-        return rc;
-    });
-    const rc = deriveUnorderedListElement(spanElements);
-    return rc;
-}
 export function SavedBoardsHtmlGenerator(containerElement) {
-    function updatedSavedBoardsList(boards) {
+    async function handleDeleteClick() {
+        //todo: add error checking to this fetch
+        const response = await fetch(`/api/boards/?id=` + `3`, {
+            method: "DELETE"
+        });
+        const savedBoardsJson = await response.json();
+        const savedBoards = savedBoardsJson.boards;
+        updateSavedBoardsList(savedBoards);
+    }
+    function deriveBoardsListElement(boards) {
+        const spanElements = boards.map(function (board) {
+            const rc = document.createElement('span');
+            const deleteButtonElement = HtmlHelpers.deriveButton("Delete", handleDeleteClick);
+            rc.append(board.name);
+            rc.appendChild(deleteButtonElement);
+            const liveCellListItemElements = board.liveCells.map(function (liveCell) {
+                return "row: " + liveCell.rowIndex + " column: " + liveCell.columnIndex;
+            });
+            const liveCellsListElement = deriveUnorderedListElement(liveCellListItemElements);
+            rc.appendChild(liveCellsListElement);
+            return rc;
+        });
+        const rc = deriveUnorderedListElement(spanElements);
+        return rc;
+    }
+    function updateSavedBoardsList(boards) {
         const headerElement = deriveHeaderElement();
         const boardsListElement = deriveBoardsListElement(boards);
         containerElement.replaceChildren(headerElement, boardsListElement);
     }
     const rc = {
-        updateSavedBoardsList: updatedSavedBoardsList
+        updateSavedBoardsList: updateSavedBoardsList
     };
     return rc;
 }
