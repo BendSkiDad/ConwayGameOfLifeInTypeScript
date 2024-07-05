@@ -64,7 +64,12 @@ export async function getBoards(request: HttpRequest, context: InvocationContext
             }
             break
         case "DELETE":
-            returnStatus = 405
+            if(request.query.has("id") && !isNaN(Number(request.query.get("id")))) {
+                const id: number = Number(request.query.get("id"))
+                boards = boards.filter((b) => b.id !== id)
+            } else {
+                returnStatus = 400
+            }
     }
     return {
         status: returnStatus,
