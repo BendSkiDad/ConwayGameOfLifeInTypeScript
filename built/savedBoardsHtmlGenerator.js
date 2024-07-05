@@ -1,4 +1,4 @@
-import * as HtmlHelpers from "./HtmlHelpers";
+import * as HtmlHelpers from "./HtmlHelpers.js";
 function deriveUnorderedListElement(listItemContents) {
     const listItems = listItemContents.map(function (listItemContent) {
         const rc = document.createElement('li');
@@ -18,17 +18,21 @@ function deriveHeaderElement() {
 export function SavedBoardsHtmlGenerator(containerElement) {
     async function handleDeleteClick() {
         //todo: add error checking to this fetch
-        const response = await fetch(`/api/boards/?id=` + `3`, {
-            method: "DELETE"
-        });
-        const savedBoardsJson = await response.json();
-        const savedBoards = savedBoardsJson.boards;
-        updateSavedBoardsList(savedBoards);
+        const id = this.getAttribute("data-id");
+        if (id) {
+            const response = await fetch(`/api/boards/?id=` + id, {
+                method: "DELETE"
+            });
+            const savedBoardsJson = await response.json();
+            const savedBoards = savedBoardsJson.boards;
+            updateSavedBoardsList(savedBoards);
+        }
     }
     function deriveBoardsListElement(boards) {
         const spanElements = boards.map(function (board) {
             const rc = document.createElement('span');
             const deleteButtonElement = HtmlHelpers.deriveButton("Delete", handleDeleteClick);
+            deleteButtonElement.setAttribute('data-id', board.id.toString());
             rc.append(board.name);
             rc.appendChild(deleteButtonElement);
             const liveCellListItemElements = board.liveCells.map(function (liveCell) {

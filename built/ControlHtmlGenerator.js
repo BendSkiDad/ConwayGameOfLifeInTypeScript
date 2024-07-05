@@ -1,5 +1,5 @@
 import * as logic from "./logicTwoDimensional.js";
-import * as HtmlHelpers from "./HtmlHelpers";
+import * as HtmlHelpers from "./HtmlHelpers.js";
 export function ControlHtmlGenerator(boardHtmlGenerator, startingIterationCount, savedBoardsHtmlGenerator) {
     const runButtonElement = HtmlHelpers.deriveButton('Run', handleRunClick);
     const iterationCountElement = document.createElement('span');

@@ -1,7 +1,7 @@
 import * as logic from "./logicTwoDimensional.js"
 import { IBoardHtmlGenerator } from "./boardHtmlGenerator.js"
 import { ISavedBoard, ISavedBoardsHtmlGenerator } from "./savedBoardsHtmlGenerator.js"
-import * as HtmlHelpers from "./HtmlHelpers"
+import * as HtmlHelpers from "./HtmlHelpers.js"
 
 export interface IControlHtmlGenerator {
     iterationCountContainerElement: HTMLParagraphElement,

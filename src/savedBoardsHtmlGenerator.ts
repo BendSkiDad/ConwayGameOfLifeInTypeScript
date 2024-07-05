@@ -1,4 +1,4 @@
-import * as HtmlHelpers from "./HtmlHelpers"
+import * as HtmlHelpers from "./HtmlHelpers.js"
 
 function deriveUnorderedListElement(listItemContents: HTMLElement[] | string[]): HTMLUListElement {
     const listItems: HTMLLIElement[] = listItemContents.map(function(listItemContent: HTMLElement | string) {
@@ -34,22 +34,26 @@ export interface ISavedBoardsHtmlGenerator {
 }
 
 export function SavedBoardsHtmlGenerator(containerElement: HTMLElement) : ISavedBoardsHtmlGenerator {
-    async function handleDeleteClick (): Promise<void> {
+    async function handleDeleteClick (this: HTMLElement): Promise<void> {
         //todo: add error checking to this fetch
-        const response: Response = await fetch(
-            `/api/boards/?id=` + `3`,
-            {
-                method: "DELETE"
-            })
-        const savedBoardsJson = await response.json()
-        const savedBoards: ISavedBoard[] = savedBoardsJson.boards
-        updateSavedBoardsList(savedBoards)
+        const id: string | null = this.getAttribute("data-id")
+        if(id) {
+            const response: Response = await fetch(
+                `/api/boards/?id=` + id,
+                {
+                    method: "DELETE"
+                })
+            const savedBoardsJson = await response.json()
+            const savedBoards: ISavedBoard[] = savedBoardsJson.boards
+            updateSavedBoardsList(savedBoards)
+        }
     }
 
     function deriveBoardsListElement(boards: ISavedBoard[]): HTMLUListElement {
         const spanElements: HTMLSpanElement[] = boards.map(function(board: ISavedBoard): HTMLSpanElement {
             const rc: HTMLSpanElement = document.createElement('span')
             const deleteButtonElement = HtmlHelpers.deriveButton("Delete", handleDeleteClick)
+            deleteButtonElement.setAttribute('data-id', board.id.toString())
     
             rc.append(board.name)
             rc.appendChild(deleteButtonElement)

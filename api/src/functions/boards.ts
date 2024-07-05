@@ -56,7 +56,11 @@ export async function getBoards(request: HttpRequest, context: InvocationContext
         case "POST": 
             const possibleSavedBoardObject = await request.json()
             if(instanceOfISavedBoard(possibleSavedBoardObject)) {
-                possibleSavedBoardObject.id = Math.max(...boards.map((b) => b.id)) + 1
+                let newBoardId: number = 1
+                if(boards && boards.length) {
+                    newBoardId = Math.max(...boards.map((b) => b.id)) + 1
+                }
+                possibleSavedBoardObject.id = newBoardId
                 boards.push(possibleSavedBoardObject)
                 returnStatus = 201
             } else {
