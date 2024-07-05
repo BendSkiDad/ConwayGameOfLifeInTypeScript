@@ -49,11 +49,6 @@ export function BoardHtmlGenerator (startingBoardExtent: logic.CellExtent, board
     const cellHeight: number = cellWidth
     const lineBetweenCellsWidth: number = 1
 
-    function updateCurrentBoardExtentToReflectLiveCells (): void {
-        const extentOfLiveCells: logic.CellExtent = logic.getExtentOfLiveCells()
-        currentBoardExtent = currentBoardExtent.getExpandedCellExtentToEncompass(extentOfLiveCells)
-    }
-
     function generateBoardAsCanvasHtmlElement (): HTMLElement {
         const canvasElement: HTMLCanvasElement = generateBoardAsCanvasElement(currentBoardExtent, cellWidth, cellHeight, lineBetweenCellsWidth)
         canvasElement.addEventListener('click', handleCanvasClick)
@@ -93,6 +88,13 @@ export function BoardHtmlGenerator (startingBoardExtent: logic.CellExtent, board
         }
         logic.toggleCellLiveness(cell)
         updateBoardElement()
+    }
+
+    function updateCurrentBoardExtentToReflectLiveCells (): void {
+        const extentOfLiveCells: logic.CellExtent =
+            logic.getExtentOfLiveCells()
+        currentBoardExtent =
+            currentBoardExtent.getExpandedCellExtentToEncompass(extentOfLiveCells)
     }
 
     function addRow (): void {

@@ -64,13 +64,6 @@ export function ControlHtmlGenerator(boardHtmlGenerator, startingIterationCount,
         isRunning = false;
         renderRunStopButtonAsRun();
     }
-    function clear() {
-        if (isRunning) {
-            stop();
-        }
-        logic.clearLiveCells();
-        boardHtmlGenerator.updateBoardElement();
-    }
     function handleAdvanceAStepClick() {
         advanceOneStepAndUpdateHtml();
     }
@@ -83,7 +76,11 @@ export function ControlHtmlGenerator(boardHtmlGenerator, startingIterationCount,
         boardHtmlGenerator.updateBoardElement();
     }
     function handleClearClick() {
-        clear();
+        if (isRunning) {
+            stop();
+        }
+        logic.clearLiveCells();
+        boardHtmlGenerator.updateBoardElement();
     }
     function handleRunClick() {
         if (isRunning) {

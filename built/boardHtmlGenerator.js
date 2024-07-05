@@ -39,10 +39,6 @@ export function BoardHtmlGenerator(startingBoardExtent, boardContainerElement) {
     const cellWidth = 20;
     const cellHeight = cellWidth;
     const lineBetweenCellsWidth = 1;
-    function updateCurrentBoardExtentToReflectLiveCells() {
-        const extentOfLiveCells = logic.getExtentOfLiveCells();
-        currentBoardExtent = currentBoardExtent.getExpandedCellExtentToEncompass(extentOfLiveCells);
-    }
     function generateBoardAsCanvasHtmlElement() {
         const canvasElement = generateBoardAsCanvasElement(currentBoardExtent, cellWidth, cellHeight, lineBetweenCellsWidth);
         canvasElement.addEventListener('click', handleCanvasClick);
@@ -83,6 +79,11 @@ export function BoardHtmlGenerator(startingBoardExtent, boardContainerElement) {
         };
         logic.toggleCellLiveness(cell);
         updateBoardElement();
+    }
+    function updateCurrentBoardExtentToReflectLiveCells() {
+        const extentOfLiveCells = logic.getExtentOfLiveCells();
+        currentBoardExtent =
+            currentBoardExtent.getExpandedCellExtentToEncompass(extentOfLiveCells);
     }
     function addRow() {
         updateCurrentBoardExtentToReflectLiveCells();

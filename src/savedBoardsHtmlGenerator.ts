@@ -35,7 +35,9 @@ export interface ISavedBoardsHtmlGenerator {
     updateSavedBoardsList: Function
 }
 
-export function SavedBoardsHtmlGenerator(containerElement: HTMLElement, boardHtmlGenerator: IBoardHtmlGenerator, savedBoards: ISavedBoard[]) : ISavedBoardsHtmlGenerator {
+export function SavedBoardsHtmlGenerator(containerElement: HTMLElement, boardHtmlGenerator: IBoardHtmlGenerator) : ISavedBoardsHtmlGenerator {
+    let savedBoards: ISavedBoard[]
+
     async function handleDeleteClick (this: HTMLElement): Promise<void> {
         const id: string | null = this.getAttribute("data-id")
         if(id) {
@@ -46,8 +48,7 @@ export function SavedBoardsHtmlGenerator(containerElement: HTMLElement, boardHtm
                     method: "DELETE"
                 })
             const savedBoardsJson = await response.json()
-            savedBoards = savedBoardsJson.boards
-            updateSavedBoardsList()
+            updateSavedBoardsList(savedBoardsJson.boards)
         }
     }
 
@@ -83,7 +84,8 @@ export function SavedBoardsHtmlGenerator(containerElement: HTMLElement, boardHtm
         return rc
     }
     
-    function updateSavedBoardsList (): void {
+    function updateSavedBoardsList (newSavedBoards: ISavedBoard[]): void {
+        savedBoards = newSavedBoards
         if(savedBoards && savedBoards.length) {
             const headerElement: HTMLElement = deriveHeaderElement()
             const boardsListElement: HTMLUListElement = deriveBoardsListElement(savedBoards)

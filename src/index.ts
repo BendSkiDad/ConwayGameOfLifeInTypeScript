@@ -30,7 +30,7 @@ const boardHtmlGenerator: IBoardHtmlGenerator =
     BoardHtmlGenerator(startingBoardExtent, boardContainerElement)
 boardHtmlGenerator.updateBoardElement()
 const savedBoardsHtmlGenerator: ISavedBoardsHtmlGenerator =
-    SavedBoardsHtmlGenerator(savedBoardsContainerElement, boardHtmlGenerator, savedBoards)
+    SavedBoardsHtmlGenerator(savedBoardsContainerElement, boardHtmlGenerator)
 const startingIterationCount: number = 0
 const controlHtmlGenerator : IControlHtmlGenerator =
     ControlHtmlGenerator(boardHtmlGenerator, startingIterationCount, savedBoardsHtmlGenerator)
@@ -47,5 +47,5 @@ rootElement.appendChild(controlHtmlGenerator.iterationCountContainerElement)
 rootElement.appendChild(buttonContainerElement)
 rootElement.appendChild(controlHtmlGenerator.saveContainerElement)
 
-savedBoardsHtmlGenerator.updateSavedBoardsList()
+savedBoardsHtmlGenerator.updateSavedBoardsList(savedBoards)
 rootElement.appendChild(savedBoardsContainerElement)

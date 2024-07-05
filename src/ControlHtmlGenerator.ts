@@ -98,14 +98,6 @@ export function ControlHtmlGenerator (boardHtmlGenerator: IBoardHtmlGenerator, s
         renderRunStopButtonAsRun()
     }
   
-    function clear (): void {
-        if (isRunning) {
-            stop()
-        }
-        logic.clearLiveCells()
-        boardHtmlGenerator.updateBoardElement()
-    }
-  
     function handleAdvanceAStepClick (): void {
         advanceOneStepAndUpdateHtml()
     }
@@ -121,7 +113,11 @@ export function ControlHtmlGenerator (boardHtmlGenerator: IBoardHtmlGenerator, s
     }
   
     function handleClearClick (): void {
-        clear()
+        if (isRunning) {
+            stop()
+        }
+        logic.clearLiveCells()
+        boardHtmlGenerator.updateBoardElement()
     }
   
     function handleRunClick (): void {

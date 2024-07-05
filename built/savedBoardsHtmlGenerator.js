@@ -16,7 +16,8 @@ function deriveHeaderElement() {
     headerElement.appendChild(headerTextNode);
     return headerElement;
 }
-export function SavedBoardsHtmlGenerator(containerElement, boardHtmlGenerator, savedBoards) {
+export function SavedBoardsHtmlGenerator(containerElement, boardHtmlGenerator) {
+    let savedBoards;
     async function handleDeleteClick() {
         const id = this.getAttribute("data-id");
         if (id) {
@@ -25,8 +26,7 @@ export function SavedBoardsHtmlGenerator(containerElement, boardHtmlGenerator, s
                 method: "DELETE"
             });
             const savedBoardsJson = await response.json();
-            savedBoards = savedBoardsJson.boards;
-            updateSavedBoardsList();
+            updateSavedBoardsList(savedBoardsJson.boards);
         }
     }
     async function handleAddClick() {
@@ -57,7 +57,8 @@ export function SavedBoardsHtmlGenerator(containerElement, boardHtmlGenerator, s
         const rc = deriveUnorderedListElement(spanElements);
         return rc;
     }
-    function updateSavedBoardsList() {
+    function updateSavedBoardsList(newSavedBoards) {
+        savedBoards = newSavedBoards;
         if (savedBoards && savedBoards.length) {
             const headerElement = deriveHeaderElement();
             const boardsListElement = deriveBoardsListElement(savedBoards);
