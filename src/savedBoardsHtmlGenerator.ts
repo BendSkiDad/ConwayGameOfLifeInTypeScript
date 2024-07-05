@@ -1,4 +1,6 @@
 import * as HtmlHelpers from "./HtmlHelpers.js"
+import { IBoardHtmlGenerator } from "./boardHtmlGenerator.js"
+import * as logic from "./logicTwoDimensional.js"
 
 function deriveUnorderedListElement(listItemContents: HTMLElement[] | string[]): HTMLUListElement {
     const listItems: HTMLLIElement[] = listItemContents.map(function(listItemContent: HTMLElement | string) {
@@ -33,19 +35,28 @@ export interface ISavedBoardsHtmlGenerator {
     updateSavedBoardsList: Function
 }
 
-export function SavedBoardsHtmlGenerator(containerElement: HTMLElement) : ISavedBoardsHtmlGenerator {
+export function SavedBoardsHtmlGenerator(containerElement: HTMLElement, boardHtmlGenerator: IBoardHtmlGenerator, savedBoards: ISavedBoard[]) : ISavedBoardsHtmlGenerator {
     async function handleDeleteClick (this: HTMLElement): Promise<void> {
-        //todo: add error checking to this fetch
         const id: string | null = this.getAttribute("data-id")
         if(id) {
+            //todo: add error checking to this fetch
             const response: Response = await fetch(
                 `/api/boards/?id=` + id,
                 {
                     method: "DELETE"
                 })
             const savedBoardsJson = await response.json()
-            const savedBoards: ISavedBoard[] = savedBoardsJson.boards
-            updateSavedBoardsList(savedBoards)
+            savedBoards = savedBoardsJson.boards
+            updateSavedBoardsList()
+        }
+    }
+
+    async function handleAddClick (this: HTMLElement): Promise<void> {
+        const id: string | null = this.getAttribute("data-id")
+        if(id) {
+            const board: ISavedBoard = savedBoards.filter((b) => b.id === Number(id))[0]
+            logic.addLiveCells(board.liveCells)
+            boardHtmlGenerator.updateBoardElement()
         }
     }
 
@@ -54,9 +65,12 @@ export function SavedBoardsHtmlGenerator(containerElement: HTMLElement) : ISaved
             const rc: HTMLSpanElement = document.createElement('span')
             const deleteButtonElement = HtmlHelpers.deriveButton("Delete", handleDeleteClick)
             deleteButtonElement.setAttribute('data-id', board.id.toString())
+            const addButtonElement = HtmlHelpers.deriveButton("Add to current board", handleAddClick)
+            addButtonElement.setAttribute('data-id', board.id.toString())
     
             rc.append(board.name)
             rc.appendChild(deleteButtonElement)
+            rc.appendChild(addButtonElement)
     
             const liveCellListItemElements: string[] = board.liveCells.map(function(liveCell): string {
                 return "row: " + liveCell.rowIndex + " column: " + liveCell.columnIndex
@@ -69,7 +83,7 @@ export function SavedBoardsHtmlGenerator(containerElement: HTMLElement) : ISaved
         return rc
     }
     
-    function updateSavedBoardsList (savedBoards: ISavedBoard[]): void {
+    function updateSavedBoardsList (): void {
         if(savedBoards && savedBoards.length) {
             const headerElement: HTMLElement = deriveHeaderElement()
             const boardsListElement: HTMLUListElement = deriveBoardsListElement(savedBoards)

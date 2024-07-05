@@ -109,6 +109,10 @@ export function toggleCellLiveness(target) {
         liveCells.splice(index, 1);
     }
 }
+export function addLiveCells(cells) {
+    const cellsToAdd = cells.filter((cell) => !isThereALiveCellAt(cell));
+    cellsToAdd.forEach((c) => liveCells.push(Cell.Create(c)));
+}
 export function clearLiveCells() {
     liveCells = [];
 }

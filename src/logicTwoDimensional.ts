@@ -165,6 +165,11 @@ export function toggleCellLiveness (target: ICell): void {
     }
 }
 
+export function addLiveCells(cells: ICell[]): void {
+    const cellsToAdd: ICell[] = cells.filter((cell) => !isThereALiveCellAt(cell))
+    cellsToAdd.forEach((c) => liveCells.push(Cell.Create(c)))
+}
+
 export function clearLiveCells (): void {
     liveCells = []
 }

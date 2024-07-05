@@ -3,6 +3,10 @@ import { BoardHtmlGenerator, IBoardHtmlGenerator } from "./boardHtmlGenerator.js
 import { ControlHtmlGenerator, IControlHtmlGenerator } from "./ControlHtmlGenerator.js"
 import { ISavedBoard, SavedBoardsHtmlGenerator, ISavedBoardsHtmlGenerator } from "./savedBoardsHtmlGenerator.js"
 
+const response: Response = await fetch(`/api/boards`)
+const savedBoardsJson = await response.json()
+const savedBoards: ISavedBoard[] = savedBoardsJson.boards
+
 logic.clearLiveCells()
 logic.addSimpleGliderGoingUpAndLeft({ rowIndex: 2, columnIndex: 2 })
 logic.addSimpleGliderGoingDownAndRight({ rowIndex: 7, columnIndex: 7 })
@@ -25,7 +29,8 @@ const savedBoardsContainerElement: HTMLParagraphElement = document.createElement
 const boardHtmlGenerator: IBoardHtmlGenerator =
     BoardHtmlGenerator(startingBoardExtent, boardContainerElement)
 boardHtmlGenerator.updateBoardElement()
-const savedBoardsHtmlGenerator: ISavedBoardsHtmlGenerator = SavedBoardsHtmlGenerator(savedBoardsContainerElement)
+const savedBoardsHtmlGenerator: ISavedBoardsHtmlGenerator =
+    SavedBoardsHtmlGenerator(savedBoardsContainerElement, boardHtmlGenerator, savedBoards)
 const startingIterationCount: number = 0
 const controlHtmlGenerator : IControlHtmlGenerator =
     ControlHtmlGenerator(boardHtmlGenerator, startingIterationCount, savedBoardsHtmlGenerator)
@@ -41,9 +46,5 @@ rootElement.appendChild(boardContainerElement)
 rootElement.appendChild(buttonContainerElement)
 rootElement.appendChild(controlHtmlGenerator.saveContainerElement)
 
-const response: Response = await fetch(`/api/boards`)
-const savedBoardsJson = await response.json()
-const savedBoards: ISavedBoard[] = savedBoardsJson.boards
-
-savedBoardsHtmlGenerator.updateSavedBoardsList(savedBoards)
+savedBoardsHtmlGenerator.updateSavedBoardsList()
 rootElement.appendChild(savedBoardsContainerElement)
