@@ -69,10 +69,14 @@ export function SavedBoardsHtmlGenerator(containerElement: HTMLElement) : ISaved
         return rc
     }
     
-    function updateSavedBoardsList (boards: ISavedBoard[]): void {
-        const headerElement: HTMLElement = deriveHeaderElement()
-        const boardsListElement: HTMLUListElement = deriveBoardsListElement(boards)
-        containerElement.replaceChildren(headerElement, boardsListElement)
+    function updateSavedBoardsList (savedBoards: ISavedBoard[]): void {
+        if(savedBoards && savedBoards.length) {
+            const headerElement: HTMLElement = deriveHeaderElement()
+            const boardsListElement: HTMLUListElement = deriveBoardsListElement(savedBoards)
+            containerElement.replaceChildren(headerElement, boardsListElement)
+        } else {
+            containerElement.replaceChildren()
+        }
     }
 
     const rc: ISavedBoardsHtmlGenerator = {

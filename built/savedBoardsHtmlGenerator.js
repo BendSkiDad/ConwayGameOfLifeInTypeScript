@@ -45,10 +45,15 @@ export function SavedBoardsHtmlGenerator(containerElement) {
         const rc = deriveUnorderedListElement(spanElements);
         return rc;
     }
-    function updateSavedBoardsList(boards) {
-        const headerElement = deriveHeaderElement();
-        const boardsListElement = deriveBoardsListElement(boards);
-        containerElement.replaceChildren(headerElement, boardsListElement);
+    function updateSavedBoardsList(savedBoards) {
+        if (savedBoards && savedBoards.length) {
+            const headerElement = deriveHeaderElement();
+            const boardsListElement = deriveBoardsListElement(savedBoards);
+            containerElement.replaceChildren(headerElement, boardsListElement);
+        }
+        else {
+            containerElement.replaceChildren();
+        }
     }
     const rc = {
         updateSavedBoardsList: updateSavedBoardsList
