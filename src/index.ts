@@ -43,6 +43,7 @@ buttonContainerElement.appendChild(controlHtmlGenerator.runButtonElement)
 
 rootElement.appendChild(controlHtmlGenerator.ruleDescriptionElement)
 rootElement.appendChild(boardContainerElement)
+rootElement.appendChild(controlHtmlGenerator.iterationCountContainerElement)
 rootElement.appendChild(buttonContainerElement)
 rootElement.appendChild(controlHtmlGenerator.saveContainerElement)
 

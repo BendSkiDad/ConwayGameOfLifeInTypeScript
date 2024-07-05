@@ -1,4 +1,39 @@
 import * as logic from "./logicTwoDimensional.js";
+function deriveColumnCount(boardExtent) {
+    return boardExtent.lowerRightCell.columnIndex -
+        boardExtent.upperLeftCell.columnIndex + 1;
+}
+function deriveRowCount(boardExtent) {
+    return boardExtent.lowerRightCell.rowIndex -
+        boardExtent.upperLeftCell.rowIndex + 1;
+}
+export function generateBoardAsCanvasElement(boardExtent, cellWidth, cellHeight, lineBetweenCellsWidth) {
+    const columnCount = deriveColumnCount(boardExtent);
+    const rowCount = deriveRowCount(boardExtent);
+    const canvasElement = document.createElement('canvas');
+    canvasElement.width = (columnCount * cellWidth) + lineBetweenCellsWidth;
+    canvasElement.height = (rowCount * cellHeight) + lineBetweenCellsWidth;
+    const ctx = canvasElement.getContext('2d');
+    ctx.strokeStyle = 'blue';
+    ctx.lineWidth = lineBetweenCellsWidth;
+    for (let canvasColumnIndex = 0; canvasColumnIndex < columnCount; canvasColumnIndex++) {
+        for (let canvasRowIndex = 0; canvasRowIndex < rowCount; canvasRowIndex++) {
+            const xCoord = lineBetweenCellsWidth / 2 + (cellWidth * canvasColumnIndex);
+            const yCoord = lineBetweenCellsWidth / 2 + (cellHeight * canvasRowIndex);
+            const logicRowIndex = canvasRowIndex + boardExtent.upperLeftCell.rowIndex;
+            const logicColumnIndex = canvasColumnIndex + boardExtent.upperLeftCell.columnIndex;
+            if (logic.isThereALiveCellAt({ rowIndex: logicRowIndex, columnIndex: logicColumnIndex })) {
+                ctx.fillStyle = 'yellow';
+            }
+            else {
+                ctx.fillStyle = 'grey';
+            }
+            ctx.fillRect(xCoord, yCoord, cellWidth, cellHeight);
+            ctx.strokeRect(xCoord, yCoord, cellWidth, cellHeight);
+        }
+    }
+    return canvasElement;
+}
 export function BoardHtmlGenerator(startingBoardExtent, boardContainerElement) {
     let currentBoardExtent = startingBoardExtent;
     const cellWidth = 20;
@@ -8,46 +43,14 @@ export function BoardHtmlGenerator(startingBoardExtent, boardContainerElement) {
         const extentOfLiveCells = logic.getExtentOfLiveCells();
         currentBoardExtent = currentBoardExtent.getExpandedCellExtentToEncompass(extentOfLiveCells);
     }
-    function deriveColumnCount() {
-        return currentBoardExtent.lowerRightCell.columnIndex -
-            currentBoardExtent.upperLeftCell.columnIndex + 1;
-    }
-    function deriveRowCount() {
-        return currentBoardExtent.lowerRightCell.rowIndex -
-            currentBoardExtent.upperLeftCell.rowIndex + 1;
-    }
     function generateBoardAsCanvasHtmlElement() {
-        const columnCount = deriveColumnCount();
-        const rowCount = deriveRowCount();
-        const canvasElement = document.createElement('canvas');
-        canvasElement.setAttribute('id', 'idCanvas');
-        canvasElement.width = (columnCount * cellWidth) + lineBetweenCellsWidth;
-        canvasElement.height = (rowCount * cellHeight) + lineBetweenCellsWidth;
+        const canvasElement = generateBoardAsCanvasElement(currentBoardExtent, cellWidth, cellHeight, lineBetweenCellsWidth);
         canvasElement.addEventListener('click', handleCanvasClick);
-        const ctx = canvasElement.getContext('2d');
-        ctx.strokeStyle = 'blue';
-        ctx.lineWidth = lineBetweenCellsWidth;
-        for (let canvasColumnIndex = 0; canvasColumnIndex < columnCount; canvasColumnIndex++) {
-            for (let canvasRowIndex = 0; canvasRowIndex < rowCount; canvasRowIndex++) {
-                const xCoord = lineBetweenCellsWidth / 2 + (cellWidth * canvasColumnIndex);
-                const yCoord = lineBetweenCellsWidth / 2 + (cellHeight * canvasRowIndex);
-                const logicRowIndex = canvasRowIndex + currentBoardExtent.upperLeftCell.rowIndex;
-                const logicColumnIndex = canvasColumnIndex + currentBoardExtent.upperLeftCell.columnIndex;
-                if (logic.isThereALiveCellAt({ rowIndex: logicRowIndex, columnIndex: logicColumnIndex })) {
-                    ctx.fillStyle = 'yellow';
-                }
-                else {
-                    ctx.fillStyle = 'grey';
-                }
-                ctx.fillRect(xCoord, yCoord, cellWidth, cellHeight);
-                ctx.strokeRect(xCoord, yCoord, cellWidth, cellHeight);
-            }
-        }
         return canvasElement;
     }
     function deriveRowIndexFromOffsetY(offsetY) {
         const edgeCellHeight = cellHeight + lineBetweenCellsWidth / 2;
-        const canvasHeight = (deriveRowCount() * cellHeight) + lineBetweenCellsWidth;
+        const canvasHeight = (deriveRowCount(currentBoardExtent) * cellHeight) + lineBetweenCellsWidth;
         const topOfBottomCellOffset = canvasHeight - edgeCellHeight;
         if (offsetY < edgeCellHeight) {
             return currentBoardExtent.upperLeftCell.rowIndex;
@@ -61,7 +64,7 @@ export function BoardHtmlGenerator(startingBoardExtent, boardContainerElement) {
     }
     function deriveColumnIndexFromOffsetX(offsetX) {
         const edgeCellWidth = cellHeight + lineBetweenCellsWidth / 2;
-        const canvasWidth = (deriveColumnCount() * cellWidth) + lineBetweenCellsWidth;
+        const canvasWidth = (deriveColumnCount(currentBoardExtent) * cellWidth) + lineBetweenCellsWidth;
         const leftOfRightCellOffset = canvasWidth - edgeCellWidth;
         if (offsetX < edgeCellWidth) {
             return currentBoardExtent.upperLeftCell.columnIndex;

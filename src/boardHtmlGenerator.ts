@@ -6,6 +6,43 @@ export interface IBoardHtmlGenerator {
     updateBoardElement: Function
 }
 
+function deriveColumnCount(boardExtent: logic.CellExtent): number {
+    return boardExtent.lowerRightCell.columnIndex -
+        boardExtent.upperLeftCell.columnIndex + 1
+}
+
+function deriveRowCount(boardExtent: logic.CellExtent): number {
+    return boardExtent.lowerRightCell.rowIndex -
+        boardExtent.upperLeftCell.rowIndex + 1
+}
+
+export function generateBoardAsCanvasElement (boardExtent: logic.CellExtent, cellWidth: number, cellHeight: number, lineBetweenCellsWidth: number): HTMLCanvasElement {
+    const columnCount: number = deriveColumnCount(boardExtent)
+    const rowCount: number = deriveRowCount(boardExtent)
+    const canvasElement: HTMLCanvasElement = document.createElement('canvas')
+    canvasElement.width = (columnCount * cellWidth) + lineBetweenCellsWidth
+    canvasElement.height = (rowCount * cellHeight) + lineBetweenCellsWidth
+    const ctx: CanvasRenderingContext2D = canvasElement.getContext('2d') as CanvasRenderingContext2D
+    ctx.strokeStyle = 'blue'
+    ctx.lineWidth = lineBetweenCellsWidth
+    for (let canvasColumnIndex: number = 0; canvasColumnIndex < columnCount; canvasColumnIndex++) {
+        for (let canvasRowIndex: number = 0; canvasRowIndex < rowCount; canvasRowIndex++) {
+            const xCoord: number = lineBetweenCellsWidth / 2 + (cellWidth * canvasColumnIndex)
+            const yCoord: number = lineBetweenCellsWidth / 2 + (cellHeight * canvasRowIndex)
+            const logicRowIndex: number = canvasRowIndex + boardExtent.upperLeftCell.rowIndex
+            const logicColumnIndex: number = canvasColumnIndex + boardExtent.upperLeftCell.columnIndex
+            if (logic.isThereALiveCellAt({ rowIndex: logicRowIndex, columnIndex: logicColumnIndex })) {
+                ctx.fillStyle = 'yellow'
+            } else {
+                ctx.fillStyle = 'grey'
+            }
+            ctx.fillRect(xCoord, yCoord, cellWidth, cellHeight)
+            ctx.strokeRect(xCoord, yCoord, cellWidth, cellHeight)
+        }
+    }
+    return canvasElement
+}
+
 export function BoardHtmlGenerator (startingBoardExtent: logic.CellExtent, boardContainerElement: HTMLElement) : IBoardHtmlGenerator {
     let currentBoardExtent: logic.CellExtent = startingBoardExtent
     const cellWidth: number = 20
@@ -17,48 +54,15 @@ export function BoardHtmlGenerator (startingBoardExtent: logic.CellExtent, board
         currentBoardExtent = currentBoardExtent.getExpandedCellExtentToEncompass(extentOfLiveCells)
     }
 
-    function deriveColumnCount(): number {
-        return currentBoardExtent.lowerRightCell.columnIndex -
-            currentBoardExtent.upperLeftCell.columnIndex + 1
-    }
-
-    function deriveRowCount(): number {
-        return currentBoardExtent.lowerRightCell.rowIndex -
-            currentBoardExtent.upperLeftCell.rowIndex + 1
-    }
-
     function generateBoardAsCanvasHtmlElement (): HTMLElement {
-        const columnCount: number = deriveColumnCount()
-        const rowCount: number = deriveRowCount()
-        const canvasElement: HTMLCanvasElement = document.createElement('canvas')
-        canvasElement.setAttribute('id', 'idCanvas')
-        canvasElement.width = (columnCount * cellWidth) + lineBetweenCellsWidth
-        canvasElement.height = (rowCount * cellHeight) + lineBetweenCellsWidth
+        const canvasElement: HTMLCanvasElement = generateBoardAsCanvasElement(currentBoardExtent, cellWidth, cellHeight, lineBetweenCellsWidth)
         canvasElement.addEventListener('click', handleCanvasClick)
-        const ctx: CanvasRenderingContext2D = canvasElement.getContext('2d') as CanvasRenderingContext2D
-        ctx.strokeStyle = 'blue'
-        ctx.lineWidth = lineBetweenCellsWidth
-        for (let canvasColumnIndex: number = 0; canvasColumnIndex < columnCount; canvasColumnIndex++) {
-            for (let canvasRowIndex: number = 0; canvasRowIndex < rowCount; canvasRowIndex++) {
-                const xCoord: number = lineBetweenCellsWidth / 2 + (cellWidth * canvasColumnIndex)
-                const yCoord: number = lineBetweenCellsWidth / 2 + (cellHeight * canvasRowIndex)
-                const logicRowIndex: number = canvasRowIndex + currentBoardExtent.upperLeftCell.rowIndex
-                const logicColumnIndex: number = canvasColumnIndex + currentBoardExtent.upperLeftCell.columnIndex
-                if (logic.isThereALiveCellAt({ rowIndex: logicRowIndex, columnIndex: logicColumnIndex })) {
-                    ctx.fillStyle = 'yellow'
-                } else {
-                    ctx.fillStyle = 'grey'
-                }
-                ctx.fillRect(xCoord, yCoord, cellWidth, cellHeight)
-                ctx.strokeRect(xCoord, yCoord, cellWidth, cellHeight)
-            }
-        }
         return canvasElement
     }
 
     function deriveRowIndexFromOffsetY(offsetY: number): number {
         const edgeCellHeight: number = cellHeight + lineBetweenCellsWidth / 2
-        const canvasHeight: number = (deriveRowCount() * cellHeight) + lineBetweenCellsWidth
+        const canvasHeight: number = (deriveRowCount(currentBoardExtent) * cellHeight) + lineBetweenCellsWidth
         const topOfBottomCellOffset: number = canvasHeight - edgeCellHeight
         if (offsetY < edgeCellHeight) {
             return currentBoardExtent.upperLeftCell.rowIndex
@@ -71,7 +75,7 @@ export function BoardHtmlGenerator (startingBoardExtent: logic.CellExtent, board
 
     function deriveColumnIndexFromOffsetX(offsetX: number): number {
         const edgeCellWidth: number = cellHeight + lineBetweenCellsWidth / 2
-        const canvasWidth: number = (deriveColumnCount() * cellWidth) + lineBetweenCellsWidth
+        const canvasWidth: number = (deriveColumnCount(currentBoardExtent) * cellWidth) + lineBetweenCellsWidth
         const leftOfRightCellOffset: number = canvasWidth - edgeCellWidth
         if (offsetX < edgeCellWidth) {
             return currentBoardExtent.upperLeftCell.columnIndex
@@ -103,7 +107,8 @@ export function BoardHtmlGenerator (startingBoardExtent: logic.CellExtent, board
 
     function updateBoardElement (): void {
         updateCurrentBoardExtentToReflectLiveCells()
-        const boardAsHtmlCanvasElement: HTMLElement = generateBoardAsCanvasHtmlElement()
+        const boardAsHtmlCanvasElement: HTMLElement =
+            generateBoardAsCanvasHtmlElement()
         boardContainerElement.replaceChildren(boardAsHtmlCanvasElement)
     }
 
