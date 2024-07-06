@@ -46,9 +46,6 @@ export function SavedBoardsHtmlGenerator(containerElement, boardHtmlGenerator) {
             deleteButtonElement.setAttribute('data-id', board.id.toString());
             const addButtonElement = HtmlHelpers.deriveButton("Add to current board", handleAddClick);
             addButtonElement.setAttribute('data-id', board.id.toString());
-            rc.append(board.name);
-            rc.appendChild(deleteButtonElement);
-            rc.appendChild(addButtonElement);
             // const liveCellListItemElements: string[] = board.liveCells.map(function(liveCell): string {
             //     return "row: " + liveCell.rowIndex + " column: " + liveCell.columnIndex
             // })
@@ -56,7 +53,12 @@ export function SavedBoardsHtmlGenerator(containerElement, boardHtmlGenerator) {
             // rc.appendChild(liveCellsListElement)
             const boardExtent = logic.getExtentOfCells(board.liveCells);
             const canvasElement = generateBoardAsCanvasElement(boardExtent, 10, 10, 1, board.liveCells);
-            rc.appendChild(canvasElement);
+            const canvasContainerElement = document.createElement('p');
+            canvasContainerElement.appendChild(canvasElement);
+            rc.append(board.name);
+            rc.appendChild(deleteButtonElement);
+            rc.appendChild(addButtonElement);
+            rc.appendChild(canvasContainerElement);
             return rc;
         });
         const rc = deriveUnorderedListElement(spanElements);

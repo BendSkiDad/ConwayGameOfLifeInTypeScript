@@ -65,14 +65,12 @@ export function SavedBoardsHtmlGenerator(containerElement: HTMLElement, boardHtm
     function deriveBoardsListElement(boards: ISavedBoard[]): HTMLUListElement {
         const spanElements: HTMLSpanElement[] = boards.map(function(board: ISavedBoard): HTMLSpanElement {
             const rc: HTMLSpanElement = document.createElement('span')
+
             const deleteButtonElement = HtmlHelpers.deriveButton("Delete", handleDeleteClick)
             deleteButtonElement.setAttribute('data-id', board.id.toString())
+
             const addButtonElement = HtmlHelpers.deriveButton("Add to current board", handleAddClick)
             addButtonElement.setAttribute('data-id', board.id.toString())
-    
-            rc.append(board.name)
-            rc.appendChild(deleteButtonElement)
-            rc.appendChild(addButtonElement)
     
             // const liveCellListItemElements: string[] = board.liveCells.map(function(liveCell): string {
             //     return "row: " + liveCell.rowIndex + " column: " + liveCell.columnIndex
@@ -82,8 +80,14 @@ export function SavedBoardsHtmlGenerator(containerElement: HTMLElement, boardHtm
 
             const boardExtent: logic.CellExtent = logic.getExtentOfCells(board.liveCells)
             const canvasElement: HTMLCanvasElement = generateBoardAsCanvasElement(boardExtent, 10, 10, 1, board.liveCells)
-            rc.appendChild(canvasElement)
+            const canvasContainerElement: HTMLParagraphElement = document.createElement('p')
+            canvasContainerElement.appendChild(canvasElement)
 
+            rc.append(board.name)
+            rc.appendChild(deleteButtonElement)
+            rc.appendChild(addButtonElement)
+            rc.appendChild(canvasContainerElement)
+    
             return rc
         })
         const rc: HTMLUListElement = deriveUnorderedListElement(spanElements)
