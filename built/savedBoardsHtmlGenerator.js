@@ -1,5 +1,7 @@
 import * as HtmlHelpers from "./HtmlHelpers.js";
+import { generateBoardAsCanvasElement } from "./boardHtmlGenerator.js";
 import * as logic from "./logicTwoDimensional.js";
+//todo: move this to the HtmlHelpers file
 function deriveUnorderedListElement(listItemContents) {
     const listItems = listItemContents.map(function (listItemContent) {
         const rc = document.createElement('li');
@@ -47,11 +49,14 @@ export function SavedBoardsHtmlGenerator(containerElement, boardHtmlGenerator) {
             rc.append(board.name);
             rc.appendChild(deleteButtonElement);
             rc.appendChild(addButtonElement);
-            const liveCellListItemElements = board.liveCells.map(function (liveCell) {
-                return "row: " + liveCell.rowIndex + " column: " + liveCell.columnIndex;
-            });
-            const liveCellsListElement = deriveUnorderedListElement(liveCellListItemElements);
-            rc.appendChild(liveCellsListElement);
+            // const liveCellListItemElements: string[] = board.liveCells.map(function(liveCell): string {
+            //     return "row: " + liveCell.rowIndex + " column: " + liveCell.columnIndex
+            // })
+            // const liveCellsListElement: HTMLUListElement = deriveUnorderedListElement(liveCellListItemElements)
+            // rc.appendChild(liveCellsListElement)
+            const boardExtent = logic.getExtentOfCells(board.liveCells);
+            const canvasElement = generateBoardAsCanvasElement(boardExtent, 10, 10, 1, board.liveCells);
+            rc.appendChild(canvasElement);
             return rc;
         });
         const rc = deriveUnorderedListElement(spanElements);

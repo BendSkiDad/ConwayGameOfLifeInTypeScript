@@ -12,7 +12,7 @@ logic.addSimpleGliderGoingUpAndLeft({ rowIndex: 2, columnIndex: 2 })
 logic.addSimpleGliderGoingDownAndRight({ rowIndex: 7, columnIndex: 7 })
 
 const startingUpperLeftCell: logic.Cell = new logic.Cell(1, 1)
-const startingLowerRightCell: logic.Cell = new logic.Cell(10, 20)
+const startingLowerRightCell: logic.Cell = new logic.Cell(10, 10)
 const startingBoardExtent: logic.CellExtent =
   new logic.CellExtent(
       startingUpperLeftCell,

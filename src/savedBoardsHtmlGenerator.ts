@@ -1,7 +1,8 @@
 import * as HtmlHelpers from "./HtmlHelpers.js"
-import { IBoardHtmlGenerator } from "./boardHtmlGenerator.js"
+import { IBoardHtmlGenerator, generateBoardAsCanvasElement } from "./boardHtmlGenerator.js"
 import * as logic from "./logicTwoDimensional.js"
 
+//todo: move this to the HtmlHelpers file
 function deriveUnorderedListElement(listItemContents: HTMLElement[] | string[]): HTMLUListElement {
     const listItems: HTMLLIElement[] = listItemContents.map(function(listItemContent: HTMLElement | string) {
         const rc: HTMLLIElement = document.createElement('li')
@@ -28,7 +29,7 @@ interface ICell {
 export interface ISavedBoard {
     id: number,
     name: string,
-    liveCells: ICell[]
+    liveCells: readonly ICell[]
 }
 
 export interface ISavedBoardsHtmlGenerator {
@@ -73,11 +74,16 @@ export function SavedBoardsHtmlGenerator(containerElement: HTMLElement, boardHtm
             rc.appendChild(deleteButtonElement)
             rc.appendChild(addButtonElement)
     
-            const liveCellListItemElements: string[] = board.liveCells.map(function(liveCell): string {
-                return "row: " + liveCell.rowIndex + " column: " + liveCell.columnIndex
-            })
-            const liveCellsListElement: HTMLUListElement = deriveUnorderedListElement(liveCellListItemElements)
-            rc.appendChild(liveCellsListElement)
+            // const liveCellListItemElements: string[] = board.liveCells.map(function(liveCell): string {
+            //     return "row: " + liveCell.rowIndex + " column: " + liveCell.columnIndex
+            // })
+            // const liveCellsListElement: HTMLUListElement = deriveUnorderedListElement(liveCellListItemElements)
+            // rc.appendChild(liveCellsListElement)
+
+            const boardExtent: logic.CellExtent = logic.getExtentOfCells(board.liveCells)
+            const canvasElement: HTMLCanvasElement = generateBoardAsCanvasElement(boardExtent, 10, 10, 1, board.liveCells)
+            rc.appendChild(canvasElement)
+
             return rc
         })
         const rc: HTMLUListElement = deriveUnorderedListElement(spanElements)

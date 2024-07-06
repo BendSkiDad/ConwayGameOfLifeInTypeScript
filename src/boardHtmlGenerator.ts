@@ -16,7 +16,7 @@ function deriveRowCount(boardExtent: logic.CellExtent): number {
         boardExtent.upperLeftCell.rowIndex + 1
 }
 
-export function generateBoardAsCanvasElement (boardExtent: logic.CellExtent, cellWidth: number, cellHeight: number, lineBetweenCellsWidth: number): HTMLCanvasElement {
+export function generateBoardAsCanvasElement (boardExtent: logic.CellExtent, cellWidth: number, cellHeight: number, lineBetweenCellsWidth: number, liveCellList: readonly logic.ICell[]): HTMLCanvasElement {
     const columnCount: number = deriveColumnCount(boardExtent)
     const rowCount: number = deriveRowCount(boardExtent)
     const canvasElement: HTMLCanvasElement = document.createElement('canvas')
@@ -31,7 +31,7 @@ export function generateBoardAsCanvasElement (boardExtent: logic.CellExtent, cel
             const yCoord: number = lineBetweenCellsWidth / 2 + (cellHeight * canvasRowIndex)
             const logicRowIndex: number = canvasRowIndex + boardExtent.upperLeftCell.rowIndex
             const logicColumnIndex: number = canvasColumnIndex + boardExtent.upperLeftCell.columnIndex
-            if (logic.isThereALiveCellAt({ rowIndex: logicRowIndex, columnIndex: logicColumnIndex })) {
+            if (logic.isThereALiveCellAt({ rowIndex: logicRowIndex, columnIndex: logicColumnIndex }, liveCellList)) {
                 ctx.fillStyle = 'yellow'
             } else {
                 ctx.fillStyle = 'grey'
@@ -49,8 +49,8 @@ export function BoardHtmlGenerator (startingBoardExtent: logic.CellExtent, board
     const cellHeight: number = cellWidth
     const lineBetweenCellsWidth: number = 1
 
-    function generateBoardAsCanvasHtmlElement (): HTMLElement {
-        const canvasElement: HTMLCanvasElement = generateBoardAsCanvasElement(currentBoardExtent, cellWidth, cellHeight, lineBetweenCellsWidth)
+    function generateBoardWithClickListenerAsCanvasElement (): HTMLElement {
+        const canvasElement: HTMLCanvasElement = generateBoardAsCanvasElement(currentBoardExtent, cellWidth, cellHeight, lineBetweenCellsWidth, logic.getLiveCells())
         canvasElement.addEventListener('click', handleCanvasClick)
         return canvasElement
     }
@@ -110,7 +110,7 @@ export function BoardHtmlGenerator (startingBoardExtent: logic.CellExtent, board
     function updateBoardElement (): void {
         updateCurrentBoardExtentToReflectLiveCells()
         const boardAsHtmlCanvasElement: HTMLElement =
-            generateBoardAsCanvasHtmlElement()
+            generateBoardWithClickListenerAsCanvasElement()
         boardContainerElement.replaceChildren(boardAsHtmlCanvasElement)
     }
 

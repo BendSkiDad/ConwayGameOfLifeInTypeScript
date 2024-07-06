@@ -95,27 +95,37 @@ export function addSimpleGliderGoingDownAndRight (upperLeftCellOfGlider: ICell) 
     )
 }
 
-export function getExtentOfLiveCells () : CellExtent {
-    const rowIndexes: number[] = liveCells.map(function (cell: ICell): number {
-      return cell.rowIndex
-    })
-    const columnIndexes: number[] = liveCells.map(function (cell: ICell): number {
-      return cell.columnIndex
-    })
-    const minRowIndex: number = Math.min(...rowIndexes)
-    const maxRowIndex: number = Math.max(...rowIndexes)
-    const minColumnIndex: number = Math.min(...columnIndexes)
-    const maxColumnIndex: number = Math.max(...columnIndexes)
-
-    const rc: CellExtent = new CellExtent(
-        new Cell(minRowIndex, minColumnIndex),
-        new Cell(maxRowIndex, maxColumnIndex)
-    )
-    return rc
+export function getExtentOfCells(cells: readonly ICell[]): CellExtent {
+    const rowIndexes: number[] = cells.map(function (cell: ICell): number {
+        return cell.rowIndex
+      })
+      const columnIndexes: number[] = cells.map(function (cell: ICell): number {
+        return cell.columnIndex
+      })
+      const minRowIndex: number = Math.min(...rowIndexes)
+      const maxRowIndex: number = Math.max(...rowIndexes)
+      const minColumnIndex: number = Math.min(...columnIndexes)
+      const maxColumnIndex: number = Math.max(...columnIndexes)
+  
+      const rc: CellExtent = new CellExtent(
+          new Cell(minRowIndex, minColumnIndex),
+          new Cell(maxRowIndex, maxColumnIndex)
+      )
+      return rc
 }
 
-export function isThereALiveCellAt (target: ICell): boolean {
+export function getExtentOfLiveCells () : CellExtent {
+    return getExtentOfCells(liveCells)
+}
+
+export function isThereACellInTheLiveListAt (target: ICell): boolean {
     return liveCells.some(function (liveCell: ICell): boolean {
+      return liveCell.rowIndex === target.rowIndex && liveCell.columnIndex === target.columnIndex
+    })
+}
+
+export function isThereALiveCellAt (target: ICell, liveCellList: readonly ICell[]): boolean {
+    return liveCellList.some(function (liveCell: ICell): boolean {
       return liveCell.rowIndex === target.rowIndex && liveCell.columnIndex === target.columnIndex
     })
 }
@@ -137,7 +147,7 @@ function deriveNextSetOfLiveCellsFromCurrentLiveCells (): Cell[] {
         const target: ICell = {rowIndex: rowIndex, columnIndex: columnIndex }
         const liveNeighborCount: number =
           deriveNumberOfLiveNeighbors(target)
-        if ((isThereALiveCellAt(target) &&
+        if ((isThereACellInTheLiveListAt(target) &&
              bornAndSurviveRule.arrSurviveNeighborCounts.includes(liveNeighborCount)
             ) ||
             bornAndSurviveRule.arrBornNeighborCounts.includes(liveNeighborCount)
@@ -165,8 +175,8 @@ export function toggleCellLiveness (target: ICell): void {
     }
 }
 
-export function addLiveCells(cells: ICell[]): void {
-    const cellsToAdd: ICell[] = cells.filter((cell) => !isThereALiveCellAt(cell))
+export function addLiveCells(cells: readonly ICell[]): void {
+    const cellsToAdd: ICell[] = cells.filter((cell) => !isThereACellInTheLiveListAt(cell))
     cellsToAdd.forEach((c) => liveCells.push(Cell.Create(c)))
 }
 

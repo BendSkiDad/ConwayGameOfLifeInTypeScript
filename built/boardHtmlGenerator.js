@@ -7,7 +7,7 @@ function deriveRowCount(boardExtent) {
     return boardExtent.lowerRightCell.rowIndex -
         boardExtent.upperLeftCell.rowIndex + 1;
 }
-export function generateBoardAsCanvasElement(boardExtent, cellWidth, cellHeight, lineBetweenCellsWidth) {
+export function generateBoardAsCanvasElement(boardExtent, cellWidth, cellHeight, lineBetweenCellsWidth, liveCellList) {
     const columnCount = deriveColumnCount(boardExtent);
     const rowCount = deriveRowCount(boardExtent);
     const canvasElement = document.createElement('canvas');
@@ -22,7 +22,7 @@ export function generateBoardAsCanvasElement(boardExtent, cellWidth, cellHeight,
             const yCoord = lineBetweenCellsWidth / 2 + (cellHeight * canvasRowIndex);
             const logicRowIndex = canvasRowIndex + boardExtent.upperLeftCell.rowIndex;
             const logicColumnIndex = canvasColumnIndex + boardExtent.upperLeftCell.columnIndex;
-            if (logic.isThereALiveCellAt({ rowIndex: logicRowIndex, columnIndex: logicColumnIndex })) {
+            if (logic.isThereALiveCellAt({ rowIndex: logicRowIndex, columnIndex: logicColumnIndex }, liveCellList)) {
                 ctx.fillStyle = 'yellow';
             }
             else {
@@ -39,8 +39,8 @@ export function BoardHtmlGenerator(startingBoardExtent, boardContainerElement) {
     const cellWidth = 20;
     const cellHeight = cellWidth;
     const lineBetweenCellsWidth = 1;
-    function generateBoardAsCanvasHtmlElement() {
-        const canvasElement = generateBoardAsCanvasElement(currentBoardExtent, cellWidth, cellHeight, lineBetweenCellsWidth);
+    function generateBoardWithClickListenerAsCanvasElement() {
+        const canvasElement = generateBoardAsCanvasElement(currentBoardExtent, cellWidth, cellHeight, lineBetweenCellsWidth, logic.getLiveCells());
         canvasElement.addEventListener('click', handleCanvasClick);
         return canvasElement;
     }
@@ -95,7 +95,7 @@ export function BoardHtmlGenerator(startingBoardExtent, boardContainerElement) {
     }
     function updateBoardElement() {
         updateCurrentBoardExtentToReflectLiveCells();
-        const boardAsHtmlCanvasElement = generateBoardAsCanvasHtmlElement();
+        const boardAsHtmlCanvasElement = generateBoardWithClickListenerAsCanvasElement();
         boardContainerElement.replaceChildren(boardAsHtmlCanvasElement);
     }
     const rc = {

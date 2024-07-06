@@ -53,11 +53,11 @@ export function addSimpleGliderGoingUpAndLeft(upperLeftCellOfGlider) {
 export function addSimpleGliderGoingDownAndRight(upperLeftCellOfGlider) {
     liveCells.push(new Cell(upperLeftCellOfGlider.rowIndex, upperLeftCellOfGlider.columnIndex + 1), new Cell(upperLeftCellOfGlider.rowIndex + 1, upperLeftCellOfGlider.columnIndex + 2), new Cell(upperLeftCellOfGlider.rowIndex + 2, upperLeftCellOfGlider.columnIndex), new Cell(upperLeftCellOfGlider.rowIndex + 2, upperLeftCellOfGlider.columnIndex + 1), new Cell(upperLeftCellOfGlider.rowIndex + 2, upperLeftCellOfGlider.columnIndex + 2));
 }
-export function getExtentOfLiveCells() {
-    const rowIndexes = liveCells.map(function (cell) {
+export function getExtentOfCells(cells) {
+    const rowIndexes = cells.map(function (cell) {
         return cell.rowIndex;
     });
-    const columnIndexes = liveCells.map(function (cell) {
+    const columnIndexes = cells.map(function (cell) {
         return cell.columnIndex;
     });
     const minRowIndex = Math.min(...rowIndexes);
@@ -67,8 +67,16 @@ export function getExtentOfLiveCells() {
     const rc = new CellExtent(new Cell(minRowIndex, minColumnIndex), new Cell(maxRowIndex, maxColumnIndex));
     return rc;
 }
-export function isThereALiveCellAt(target) {
+export function getExtentOfLiveCells() {
+    return getExtentOfCells(liveCells);
+}
+export function isThereACellInTheLiveListAt(target) {
     return liveCells.some(function (liveCell) {
+        return liveCell.rowIndex === target.rowIndex && liveCell.columnIndex === target.columnIndex;
+    });
+}
+export function isThereALiveCellAt(target, liveCellList) {
+    return liveCellList.some(function (liveCell) {
         return liveCell.rowIndex === target.rowIndex && liveCell.columnIndex === target.columnIndex;
     });
 }
@@ -85,7 +93,7 @@ function deriveNextSetOfLiveCellsFromCurrentLiveCells() {
         for (let columnIndex = extentOfLiveCellsExpandedBy1.upperLeftCell.columnIndex; columnIndex <= extentOfLiveCellsExpandedBy1.lowerRightCell.columnIndex; columnIndex++) {
             const target = { rowIndex: rowIndex, columnIndex: columnIndex };
             const liveNeighborCount = deriveNumberOfLiveNeighbors(target);
-            if ((isThereALiveCellAt(target) &&
+            if ((isThereACellInTheLiveListAt(target) &&
                 bornAndSurviveRule.arrSurviveNeighborCounts.includes(liveNeighborCount)) ||
                 bornAndSurviveRule.arrBornNeighborCounts.includes(liveNeighborCount)) {
                 newLiveCells.push(new Cell(rowIndex, columnIndex));
@@ -110,7 +118,7 @@ export function toggleCellLiveness(target) {
     }
 }
 export function addLiveCells(cells) {
-    const cellsToAdd = cells.filter((cell) => !isThereALiveCellAt(cell));
+    const cellsToAdd = cells.filter((cell) => !isThereACellInTheLiveListAt(cell));
     cellsToAdd.forEach((c) => liveCells.push(Cell.Create(c)));
 }
 export function clearLiveCells() {
