@@ -21,15 +21,10 @@ function deriveHeaderElement(): HTMLElement {
     return headerElement
 }
 
-interface ICell {
-    rowIndex: number,
-    columnIndex: number
-}
-
 export interface ISavedBoard {
     id: number,
     name: string,
-    liveCells: readonly ICell[]
+    liveCells: readonly logic.ICell[]
 }
 
 export interface ISavedBoardsHtmlGenerator {

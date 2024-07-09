@@ -1,4 +1,5 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
+import { ISavedBoard } from "../../../built/SavedBoardsHtmlGenerator.js"
 
 let boards = [
     {
@@ -28,17 +29,6 @@ let boards = [
         ]
     },
 ]
-
-interface ICell {
-    rowIndex: number,
-    columnIndex: number
-}
-
-interface ISavedBoard {
-    id: number,
-    name: string,
-    liveCells: ICell[]
-}
 
 function instanceOfISavedBoard(object: any): object is ISavedBoard {
     if(object.name !== undefined && object.liveCells !== undefined) {
