@@ -6,8 +6,6 @@ const response = await fetch(`/api/boards`);
 const savedBoardsJson = await response.json();
 const savedBoards = savedBoardsJson.boards;
 logic.clearLiveCells();
-logic.addSimpleGliderGoingUpAndLeft({ rowIndex: 2, columnIndex: 2 });
-logic.addSimpleGliderGoingDownAndRight({ rowIndex: 7, columnIndex: 7 });
 const startingUpperLeftCell = new logic.Cell(1, 1);
 const startingLowerRightCell = new logic.Cell(10, 10);
 const startingBoardExtent = new logic.CellExtent(startingUpperLeftCell, startingLowerRightCell);

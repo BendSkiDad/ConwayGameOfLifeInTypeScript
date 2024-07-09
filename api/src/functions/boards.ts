@@ -6,21 +6,26 @@ let boards = [
         id: 1,
         name: 'simple repeater',
         liveCells: [
-            { rowIndex: 2, columnIndex: 15 },
-            { rowIndex: 3, columnIndex: 15 },
-            { rowIndex: 4, columnIndex: 15 },
+            { rowIndex: 7, columnIndex: 4 },
+            { rowIndex: 8, columnIndex: 4 },
+            { rowIndex: 9, columnIndex: 4 },
         ]
     },
     {
         id: 2,
-        name: 'diagnol gliders',
+        name: 'diagnol glider going northwest',
         liveCells: [
             { rowIndex: 2, columnIndex: 2 },
             { rowIndex: 2, columnIndex: 3 },
             { rowIndex: 2, columnIndex: 4 },
             { rowIndex: 3, columnIndex: 2 },
             { rowIndex: 4, columnIndex: 3 },
-
+        ]
+    },
+    {
+        id: 3,
+        name: 'diagnol glider going southeast',
+        liveCells: [
             { rowIndex: 7, columnIndex: 8 },
             { rowIndex: 8, columnIndex: 9 },
             { rowIndex: 9, columnIndex: 7 },

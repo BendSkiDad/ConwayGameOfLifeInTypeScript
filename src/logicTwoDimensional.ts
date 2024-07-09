@@ -75,26 +75,6 @@ export function getLiveCells () : readonly Cell[] {
     return liveCells
 }
 
-export function addSimpleGliderGoingUpAndLeft (upperLeftCellOfGlider: ICell) : void {
-    liveCells.push(
-        new Cell(upperLeftCellOfGlider.rowIndex, upperLeftCellOfGlider.columnIndex),
-        new Cell(upperLeftCellOfGlider.rowIndex, upperLeftCellOfGlider.columnIndex + 1),
-        new Cell(upperLeftCellOfGlider.rowIndex, upperLeftCellOfGlider.columnIndex + 2),
-        new Cell(upperLeftCellOfGlider.rowIndex + 1, upperLeftCellOfGlider.columnIndex),
-        new Cell(upperLeftCellOfGlider.rowIndex + 2, upperLeftCellOfGlider.columnIndex + 1)
-    )
-}
-
-export function addSimpleGliderGoingDownAndRight (upperLeftCellOfGlider: ICell) : void {
-    liveCells.push(
-        new Cell(upperLeftCellOfGlider.rowIndex, upperLeftCellOfGlider.columnIndex + 1),
-        new Cell(upperLeftCellOfGlider.rowIndex + 1, upperLeftCellOfGlider.columnIndex + 2),
-        new Cell(upperLeftCellOfGlider.rowIndex + 2, upperLeftCellOfGlider.columnIndex),
-        new Cell(upperLeftCellOfGlider.rowIndex + 2, upperLeftCellOfGlider.columnIndex + 1),
-        new Cell(upperLeftCellOfGlider.rowIndex + 2, upperLeftCellOfGlider.columnIndex + 2)
-    )
-}
-
 export function getExtentOfCells(cells: readonly ICell[]): CellExtent {
     const rowIndexes: number[] = cells.map(function (cell: ICell): number {
         return cell.rowIndex
